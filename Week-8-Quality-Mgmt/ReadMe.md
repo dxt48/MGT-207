@@ -16,7 +16,7 @@ This week, you will act as a manager in the **Operations Management Simulation: 
   ▶️ [Watch the Simulation Case Introduction](https://youtu.be/8zX7LZ3v4iU)
 * **Deadline:** The simulation must be completed by **May 27, 2026, at midnight**.
 * **Tip for the Sim:** Remember that being "in-control" simply means a process is behaving as it historically has; it does not automatically mean the process is highly capable of meeting customer specification limits [4, 9].
-* **Grading:** I will grade the on *total cost* (the smaller the better) in Challenge 2 and Challenge 4 (no grade for Challenge 3). 
+* **Grading:** I will grade the on *total cost* (the smaller the better) in Challenge 2 and Challenge 4 (no grade for Challenge 3; this challenge, however, must be completed to a grade). 
 
 ## 3. Complete the Weekly Canvas Homework
 * The regular weekly homework assignment covering this week's quality management concepts is now live on Canvas.
