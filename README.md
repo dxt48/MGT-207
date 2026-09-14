@@ -1,4 +1,4 @@
-# MGT 207 – Spring 2026  
+# MGT 207
 **Lecture Materials Repository**
 
 ### Welcome
