@@ -7,8 +7,6 @@ Hello and welcome to **MGT 207**!
 
 This public GitHub repository is the official home for all lecture materials. Everything we use in class — lecture notes, Excel workbooks, Python scripts, data files, and any other supporting resources — will be posted here.
 
-Materials for each lecture will be uploaded **before** class so you can download them and come prepared.
-
 ---
 
 ### Repository Structure
@@ -19,9 +17,8 @@ Lecture materials are organized into **separate folders**, one per lecture.
 `Lecture XX - Short Topic Title`
 
 **Examples:**
-- `Lecture 01 - Course Introduction and Overview`
-- `Lecture 02 - Data Management with Excel`
-- `Lecture 03 - Introduction to Python for Business Analytics`
+- `Week 01 - Course Introduction and Overview`
+- `Week 02 - Analytics Primer`
 
 **Inside each lecture folder you will find:**
 - Lecture notes or slides (usually PDF)
@@ -29,6 +26,10 @@ Lecture materials are organized into **separate folders**, one per lecture.
 - Python code files (`.py`)
 - Data files (`.csv`, `.xlsx`, etc.)
 - Any other files or resources used in that class
+
+**Link to the Harvard Pack with Cases**
+
+<https://hbsp.harvard.edu/import/1456740>
 
 ---
 
