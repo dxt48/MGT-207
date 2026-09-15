@@ -5,7 +5,17 @@
 
 Hello and welcome to **MGT 207**!  
 
-This public GitHub repository is the official home for all lecture materials. Everything we use in class — lecture notes, Excel workbooks, Python scripts, data files, and any other supporting resources — will be posted here.
+This public GitHub repository is the official home for all lecture materials. Everything we use in class — lecture notes, Excel workbooks, Python scripts, data files, and any other supporting resources — will be posted here, including links helpful links: 
+
+**Link to the Harvard Case Pack**
+
+<https://hbsp.harvard.edu/import/1456740>
+
+**YouTube Link**
+
+Occasionally, I may post videos on class material. Lectures, however, will not be recorded. All class videos can be found here:
+
+<https://www.youtube.com/playlist?list=PLnRO-Bb2kD7_bTDCQlz-fqO0a-wySTKlC>
 
 ---
 
@@ -26,10 +36,6 @@ Lecture materials are organized into **separate folders**, one per lecture.
 - Python code files (`.py`)
 - Data files (`.csv`, `.xlsx`, etc.)
 - Any other files or resources used in that class
-
-**Link to the Harvard Pack with Cases**
-
-<https://hbsp.harvard.edu/import/1456740>
 
 ---
 
