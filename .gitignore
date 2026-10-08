@@ -1,10 +1,8 @@
-!/README.md
-!/MGT207_Syllabus.pdf
-!/Syllabus-Slides.pdf
 # Ignore everything
 *
 !*/
 !/.gitignore
+!/README.md
 
 !/Week-1/Intro/
 !/Week-2/Optimization/
@@ -15,6 +13,8 @@
 !/Week-7/Queuing/
 !/Week-8/Quality-Management/
 !/Week-9/Supply-Chain-Management/
+!/MGT_207_Syllabus/
+!/MGT207_Syllabus_Slides/
 
 # Ignore all files in the topic directories by default
 /Week-1/Intro/*
@@ -26,6 +26,8 @@
 /Week-7/Queuing/*
 /Week-8/Quality-Management/*
 /Week-9/Supply-Chain-Management/*
+/MGT_207_Syllabus/*
+/MGT207_Syllabus_Slides/*
 
 # Unignore specific extensions in the topic directories
 !/Week-1/Intro/*.pdf
@@ -100,3 +102,19 @@
 !/Week-9/Supply-Chain-Management/*.docx
 !/Week-9/Supply-Chain-Management/*.doc
 !/Week-9/Supply-Chain-Management/*.ipynb
+!/MGT_207_Syllabus/*.pdf
+!/MGT_207_Syllabus/*.pptx
+!/MGT_207_Syllabus/*.ppt
+!/MGT_207_Syllabus/*.xlsx
+!/MGT_207_Syllabus/*.xls
+!/MGT_207_Syllabus/*.docx
+!/MGT_207_Syllabus/*.doc
+!/MGT_207_Syllabus/*.ipynb
+!/MGT207_Syllabus_Slides/*.pdf
+!/MGT207_Syllabus_Slides/*.pptx
+!/MGT207_Syllabus_Slides/*.ppt
+!/MGT207_Syllabus_Slides/*.xlsx
+!/MGT207_Syllabus_Slides/*.xls
+!/MGT207_Syllabus_Slides/*.docx
+!/MGT207_Syllabus_Slides/*.doc
+!/MGT207_Syllabus_Slides/*.ipynb
