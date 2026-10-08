@@ -2,16 +2,14 @@
 *
 !*/
 
-# Now, within the directories, we want to ignore everything EXCEPT the specific subdirectories.
-# Since we unignored all directories above, we just need to ensure files are ignored.
-# We'll just explicitly unignore the subdirectories and their contents.
-!/Week 1 (Intro)/Week-1-Intro/**
-!/Week 2 (Abridged Optimization)/Week-2-Optimization/**
-!/Week 3 (Project Management)/Week-3-Project-Management/**
-!/Week 4 (Forecasting)/Week-4-Forecasting/**
-!/Week 5 (Inventory)/Week-5-Inventory/**
-!/Week 6 (Process Management)/Week-6-Process-Mgmt/**
-!/Week 7 (Queuing)/Week-7-Queueing/**
-!/Week 8 (Quality Management)/Week-8-Quality-Mgmt/**
-!/Week 9 (Supply Chain Management)/Week-9-SC-Mgmt/**
+# Unignore the specific subdirectories that contain public files
+!/Week-1/Intro/**
+!/Week-2/Optimization/**
+!/Week-3/Project-Management/**
+!/Week-4/Forecasting/**
+!/Week-5/Inventory/**
+!/Week-6/Process-Management/**
+!/Week-7/Queuing/**
+!/Week-8/Quality-Management/**
+!/Week-9/Supply-Chain-Management/**
 !/.gitignore
