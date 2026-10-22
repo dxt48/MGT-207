@@ -118,3 +118,11 @@
 !/MGT207_Syllabus_Slides/*.docx
 !/MGT207_Syllabus_Slides/*.doc
 !/MGT207_Syllabus_Slides/*.ipynb
+
+# Ignore instructor and solution files so they never upload to GitHub
+**/*_Instructor.pdf
+**/*_INSTRUCTOR.pdf
+**/*_instructor.pdf
+**/*_Solutions.pdf
+**/*_solutions.pdf
+
