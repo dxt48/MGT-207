@@ -11,6 +11,7 @@
 !/Week-5/Inventory/
 !/Week-6/Process-Management/
 !/Week-7/Queuing/
+!/Week-7/Queueing/
 !/Week-8/Quality-Management/
 !/Week-9/Supply-Chain-Management/
 !/MGT_207_Syllabus/
@@ -24,6 +25,7 @@
 /Week-5/Inventory/*
 /Week-6/Process-Management/*
 /Week-7/Queuing/*
+/Week-7/Queueing/*
 /Week-8/Quality-Management/*
 /Week-9/Supply-Chain-Management/*
 /MGT_207_Syllabus/*
@@ -86,6 +88,14 @@
 !/Week-7/Queuing/*.docx
 !/Week-7/Queuing/*.doc
 !/Week-7/Queuing/*.ipynb
+!/Week-7/Queueing/*.pdf
+!/Week-7/Queueing/*.pptx
+!/Week-7/Queueing/*.ppt
+!/Week-7/Queueing/*.xlsx
+!/Week-7/Queueing/*.xls
+!/Week-7/Queueing/*.docx
+!/Week-7/Queueing/*.doc
+!/Week-7/Queueing/*.ipynb
 !/Week-8/Quality-Management/*.pdf
 !/Week-8/Quality-Management/*.pptx
 !/Week-8/Quality-Management/*.ppt
