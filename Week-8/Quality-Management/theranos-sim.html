@@ -1,0 +1,1648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Newark Clinical Lab Quality Director — SPC &amp; Capability Simulator (MGT 207)</title>
+<style>
+  :root {
+    --navy: #0f2d5f;
+    --brand: #1e50aa;
+    --teal: #008080;
+    --gold: #d4a017;
+    --amber-bg: #fff8e6;
+    --red: #c31e1e;
+    --red-bg: #fdf2f2;
+    --green: #198737;
+    --green-bg: #eefaf2;
+    --bg: #f3f6fb;
+    --card: #ffffff;
+    --border: #cddcf0;
+    --text: #1a2536;
+    --muted: #5a6b85;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.45;
+    padding-bottom: 40px;
+  }
+  header {
+    background: linear-gradient(135deg, var(--navy) 0%, #173f82 100%);
+    color: #fff;
+    padding: 14px 22px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    border-bottom: 3px solid var(--gold);
+    box-shadow: 0 2px 10px rgba(15,45,95,0.18);
+  }
+  .brand-title h1 {
+    font-size: 1.18rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+  }
+  .brand-title p {
+    font-size: 0.8rem;
+    color: #ffdf85;
+    margin-top: 2px;
+  }
+  .header-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    border: none;
+    border-radius: 6px;
+    padding: 7px 13px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+  }
+  .btn-gold { background: var(--gold); color: #111; }
+  .btn-gold:hover { background: #e5b224; }
+  .btn-outline { background: rgba(255,255,255,0.12); color: #fff; border: 1px solid rgba(255,255,255,0.35); }
+  .btn-outline:hover { background: rgba(255,255,255,0.22); }
+  .btn-primary { background: var(--brand); color: #fff; }
+  .btn-primary:hover { background: #153c85; }
+  .btn-teal { background: var(--teal); color: #fff; }
+  .btn-teal:hover { background: #006666; }
+  .btn-danger { background: var(--red); color: #fff; }
+  .btn-danger:hover { background: #a01515; }
+  .btn-sm { padding: 5px 10px; font-size: 0.75rem; }
+
+  .nav-tabs {
+    display: flex;
+    background: #dce6f5;
+    padding: 8px 20px 0;
+    gap: 6px;
+    border-bottom: 2px solid var(--border);
+    overflow-x: auto;
+  }
+  .tab-btn {
+    background: #eaf0fa;
+    color: var(--navy);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    padding: 9px 15px;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.15s;
+  }
+  .tab-btn:hover { background: #f5f8fd; }
+  .tab-btn.active {
+    background: var(--card);
+    color: var(--brand);
+    border-top: 3px solid var(--brand);
+    margin-bottom: -2px;
+    padding-bottom: 11px;
+  }
+  .badge-q {
+    background: var(--navy);
+    color: #fff;
+    font-size: 0.68rem;
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-left: 5px;
+  }
+
+  .main-layout {
+    max-width: 1380px;
+    margin: 16px auto;
+    padding: 0 18px;
+    display: grid;
+    grid-template-columns: 1fr 330px;
+    gap: 16px;
+  }
+  @media (max-width: 1024px) {
+    .main-layout { grid-template-columns: 1fr; }
+  }
+
+  .round-panel { display: none; }
+  .round-panel.active { display: block; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 15px 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 4px rgba(15,45,95,0.05);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eef3fb;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .card-title {
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--navy);
+  }
+  .scenario-banner {
+    background: #eef4fc;
+    border-left: 4px solid var(--brand);
+    padding: 9px 12px;
+    font-size: 0.81rem;
+    border-radius: 0 6px 6px 0;
+    margin-bottom: 12px;
+  }
+  .formula-ribbon {
+    background: var(--amber-bg);
+    border: 1.5px solid var(--gold);
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 0.78rem;
+    color: var(--navy);
+    font-weight: 600;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  .controls-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .control-box {
+    background: #f8faff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .control-box label {
+    display: block;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  select, input[type="number"] {
+    width: 100%;
+    padding: 7px 9px;
+    border: 1px solid #b8cceb;
+    border-radius: 5px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    background: #fff;
+  }
+
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .kpi-card {
+    background: #f8faff;
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 9px 11px;
+    text-align: center;
+  }
+  .kpi-card.alert { background: var(--red-bg); border-color: #f0b4b4; }
+  .kpi-card.good { background: var(--green-bg); border-color: #a8dfc0; }
+  .kpi-card.warn { background: var(--amber-bg); border-color: #ebd082; }
+  .kpi-label { font-size: 0.71rem; color: var(--muted); font-weight: 600; text-transform: uppercase; }
+  .kpi-val { font-size: 1.15rem; font-weight: 800; color: var(--navy); margin-top: 3px; }
+  .kpi-card.alert .kpi-val { color: var(--red); }
+  .kpi-card.good .kpi-val { color: var(--green); }
+  .kpi-sub { font-size: 0.69rem; color: var(--muted); margin-top: 2px; }
+
+  .canvas-wrap {
+    width: 100%;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    margin-bottom: 10px;
+    user-select: none;
+  }
+  canvas {
+    width: 100%;
+    height: 255px;
+    display: block;
+  }
+
+  table.sim-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.77rem;
+    margin-top: 8px;
+  }
+  table.sim-table th {
+    background: var(--navy);
+    color: #fff;
+    padding: 6px 8px;
+    text-align: center;
+    font-weight: 600;
+  }
+  table.sim-table td {
+    padding: 5px 8px;
+    border-bottom: 1px solid #e1eaf7;
+    text-align: center;
+  }
+  table.sim-table tr:nth-child(even) { background: #f6f9fd; }
+  table.sim-table tr.breach-row { background: #ffe8e8 !important; color: var(--red); font-weight: 700; }
+  table.sim-table tr.selected-row { background: #fff3cd !important; font-weight: 700; }
+
+  .notepad-card {
+    background: var(--card);
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    padding: 13px 15px;
+    position: sticky;
+    top: 14px;
+  }
+  .notepad-title {
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: var(--navy);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--gold);
+    padding-bottom: 7px;
+    margin-bottom: 10px;
+  }
+  .log-list {
+    font-size: 0.75rem;
+    max-height: 460px;
+    overflow-y: auto;
+  }
+  .log-item {
+    background: #f6f9fd;
+    border-left: 3px solid var(--brand);
+    padding: 6px 8px;
+    margin-bottom: 7px;
+    border-radius: 0 4px 4px 0;
+  }
+  .log-item strong { color: var(--navy); display: block; margin-bottom: 2px; }
+  .toast {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--navy);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    display: none;
+    z-index: 9999;
+  }
+  .pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill-btn {
+    padding: 6px 11px;
+    font-size: 0.77rem;
+    font-weight: 700;
+    border: 1.5px solid var(--brand);
+    background: #fff;
+    color: var(--brand);
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  .pill-btn.active { background: var(--brand); color: #fff; }
+  .fraud-banner {
+    display: none;
+    background: var(--red);
+    color: #fff;
+    padding: 9px 13px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin: 8px 0;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-title">
+    <h1>NEWARK CLINICAL LAB QUALITY DIRECTOR — SPC &amp; CAPABILITY SIMULATOR</h1>
+    <p>MGT 207 Operations Management | Interactive 4-Round Clinical Diagnostics Lab (Canvas Quiz Q1–Q24)</p>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-gold" onclick="copyGeminiPrompt()">🤖 Copy Current Scenario Prompt for Gemini AI</button>
+    <a class="btn btn-outline" href="theranos-sim.html" target="_blank" rel="noopener">↗ Open in Full Browser Tab</a>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <button class="tab-btn active" onclick="switchTab(1)" id="tabbtn-1">
+    Round 1: Signal vs. Noise &amp; Tampering <span class="badge-q">Q1–Q6</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(2)" id="tabbtn-2">
+    Round 2: Assay Drift &amp; X&#772;-Chart Andon Cord <span class="badge-q">Q7–Q12</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(3)" id="tabbtn-3">
+    Round 3: Edison B12 R-Chart &amp; Pooled Trap <span class="badge-q">Q13–Q18</span>
+  </button>
+  <button class="tab-btn" onclick="switchTab(4)" id="tabbtn-4">
+    Round 4: CMS Capability (Cp, Cpk &amp; $100k Budget) <span class="badge-q">Q19–Q24</span>
+  </button>
+</nav>
+
+<div class="main-layout">
+  <div class="sim-content">
+
+    <!-- ==================== ROUND 1 ==================== -->
+    <section class="round-panel active" id="round-1">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Round 1: Newark Fasting Glucose Analyzer — Technician Tampering vs. ±3&sigma; Deadband (Q1–Q6)</div>
+          <div>
+            <button class="btn btn-teal btn-sm" onclick="pinRound1()">📌 Pin Current Run to Notepad</button>
+          </div>
+        </div>
+        <div class="scenario-banner">
+          <strong>Clinical Context:</strong> A Newark analyzer tests a preserved <strong>100.0 mg/dL</strong> human plasma glucose standard across <strong>12 hours</strong>. The analyzer is inherently stable with true mean <strong>&mu; = 100.0 mg/dL</strong> and common-cause noise <strong>&sigma; = 2.0 mg/dL</strong> (&pm;3&sigma; limits = <strong>[94.0, 106.0] mg/dL</strong>). Each manual offset recalibration costs <strong>$500</strong> in reagent/downtime, and any hourly reading breaching outside <strong>[94.0, 106.0] mg/dL</strong> triggers a <strong>$5,000</strong> QC failure investigation.
+        </div>
+
+        <div class="controls-grid">
+          <div class="control-box">
+            <label for="r1-policy">1. Select Technician Calibration Policy</label>
+            <select id="r1-policy" onchange="runRound1()">
+              <option value="3sigma">Policy A: ±3σ SPC Deadband (Only recalibrate outside [94.0, 106.0])</option>
+              <option value="tamper">Policy B: Full Tampering (Dial offset -e_{t-1} after EVERY hour)</option>
+              <option value="1sigma">Policy C: Narrow ±1σ Deadband (Recalibrate whenever reading outside [98.0, 102.0])</option>
+              <option value="2sigma">Policy D: Moderate ±2σ Deadband (Recalibrate outside [96.0, 104.0])</option>
+            </select>
+          </div>
+          <div class="control-box">
+            <label>2. Step-by-Step Hour Inspector</label>
+            <div style="display:flex; gap:6px; align-items:center;">
+              <button class="btn btn-primary btn-sm" onclick="stepR1(-1)">&#9664; Prev Hr</button>
+              <span id="r1-step-label" style="font-size:0.8rem; font-weight:700; min-width:85px; text-align:center;">All 12 Hrs</span>
+              <button class="btn btn-primary btn-sm" onclick="stepR1(1)">Next Hr &#9654;</button>
+              <button class="btn btn-gold btn-sm" onclick="stepR1(0)">Show All 12</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card" id="r1-kpi-mean">
+            <div class="kpi-label">Sample Mean (X&#772;)</div>
+            <div class="kpi-val" id="r1-val-mean">99.85</div>
+            <div class="kpi-sub">Target &mu; = 100.00 mg/dL</div>
+          </div>
+          <div class="kpi-card" id="r1-kpi-sd">
+            <div class="kpi-label">Sample Std Dev (s)</div>
+            <div class="kpi-val" id="r1-val-sd">2.83</div>
+            <div class="kpi-sub" id="r1-sub-sd">Natural spread (mg/dL)</div>
+          </div>
+          <div class="kpi-card" id="r1-kpi-range">
+            <div class="kpi-label">12-Hr Spread (R = Max-Min)</div>
+            <div class="kpi-val" id="r1-val-range">7.20</div>
+            <div class="kpi-sub" id="r1-sub-minmax">[96.2, 103.4] mg/dL</div>
+          </div>
+          <div class="kpi-card" id="r1-kpi-recal">
+            <div class="kpi-label">Recalibrations ($500 ea)</div>
+            <div class="kpi-val" id="r1-val-recal">0</div>
+            <div class="kpi-sub" id="r1-sub-recal">Downtime cost: $0</div>
+          </div>
+          <div class="kpi-card" id="r1-kpi-breach">
+            <div class="kpi-label">Breaches Outside [94, 106]</div>
+            <div class="kpi-val" id="r1-val-breach">0</div>
+            <div class="kpi-sub" id="r1-sub-breach">Breach cost: $0</div>
+          </div>
+          <div class="kpi-card" id="r1-kpi-cost">
+            <div class="kpi-label">Total Quality Cost</div>
+            <div class="kpi-val" id="r1-val-cost">$0</div>
+            <div class="kpi-sub">Recal + Breach Penalties</div>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="canvas-r1" width="880" height="255"></canvas>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="sim-table" id="table-r1"></table>
+        </div>
+
+        <div class="formula-ribbon">
+          FORMULA REMINDER: &pm;3&sigma; Limits = &mu; &pm; 3&sigma; = [94.0, 106.0] mg/dL &nbsp;|&nbsp; Tampered Output: Y<sub>t</sub> = &mu; + &epsilon;<sub>t</sub> &minus; &epsilon;<sub>t&minus;1</sub> &rArr; Var(Y<sub>t</sub>) = 2&sigma;&sup2; (&sigma;<sub>tamp</sub> = &radic;2 &sigma; &approx; 1.414&sigma;)
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ROUND 2 ==================== -->
+    <section class="round-panel" id="round-2">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Round 2: Newark Potassium Assay Drift — X&#772;-Chart &amp; Andon Cord Timing (Q7–Q12)</div>
+          <div>
+            <button class="btn btn-teal btn-sm" onclick="pinRound2()">📌 Pin Current Run to Notepad</button>
+          </div>
+        </div>
+        <div class="scenario-banner">
+          <strong>Clinical Context:</strong> Every hour, the Newark Potassium analyzer runs a subgroup of <strong>n = 4</strong> preserved plasma vials. In <strong>Phase I (Hours 1–6)</strong>, the process is calibrated in statistical control. Starting in <strong>Phase II (Hours 7–12)</strong>, an unrefrigerated reagent cassette begins degrading. Pulling the Andon cord to replace the cassette costs <strong>$3,000</strong> (plus a <strong>$5,000</strong> false-alarm waste fee if pulled <em>before</em> X&#772; breaches LCL<sub>X&#772;</sub>). However, every hour that passes at or after an LCL<sub>X&#772;</sub> breach <em>without</em> stopping the line releases flawed hyperkalemia/hypokalemia tests to patients, incurring a <strong>$20,000 CMS penalty per unstopped breach hour</strong>!
+        </div>
+
+        <div class="controls-grid">
+          <div class="control-box">
+            <label for="r2-n-select">1. Subgroup Size Lookup (Table Factor A<sub>2</sub>)</label>
+            <select id="r2-n-select" onchange="runRound2()">
+              <option value="0.73">Use Subgroup Size n = 4 (A2 = 0.73) — CORRECT</option>
+              <option value="0.48">Trap: Use Number of Baseline Samples N = 6 (A2 = 0.48)</option>
+              <option value="0.58">Trap: Use n = 5 (A2 = 0.58)</option>
+            </select>
+          </div>
+          <div class="control-box">
+            <label for="r2-stop-hr">2. Select Andon Cord Pull Hour (Phase II Decision)</label>
+            <select id="r2-stop-hr" onchange="runRound2()">
+              <option value="99">Never Pull Cord (Run through Hour 12 without stopping)</option>
+              <option value="7">Pull Cord at Hour 7 (X̄_7 = 4.460 mmol/L)</option>
+              <option value="8">Pull Cord at Hour 8 (X̄_8 = 4.360 mmol/L)</option>
+              <option value="9">Pull Cord at Hour 9 (X̄_9 = 4.280 mmol/L)</option>
+              <option value="10">Pull Cord at Hour 10 (X̄_10 = 4.200 mmol/L)</option>
+              <option value="11">Pull Cord at Hour 11 (X̄_11 = 4.130 mmol/L)</option>
+              <option value="12">Pull Cord at Hour 12 (X̄_12 = 4.030 mmol/L — Wait for 4.10 threshold)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Phase I Centerline (X&#772;&#772;)</div>
+            <div class="kpi-val" id="r2-val-xbarbar">4.500</div>
+            <div class="kpi-sub">Mean Range R&#772; = 0.300 mmol/L</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-label">Upper Limit (UCL<sub>X&#772;</sub>)</div>
+            <div class="kpi-val" id="r2-val-ucl">4.719</div>
+            <div class="kpi-sub">X&#772;&#772; + A<sub>2</sub>R&#772; (mmol/L)</div>
+          </div>
+          <div class="kpi-card warn">
+            <div class="kpi-label">Lower Limit (LCL<sub>X&#772;</sub>)</div>
+            <div class="kpi-val" id="r2-val-lcl">4.281</div>
+            <div class="kpi-sub">X&#772;&#772; &minus; A<sub>2</sub>R&#772; (mmol/L)</div>
+          </div>
+          <div class="kpi-card" id="r2-kpi-breachhr">
+            <div class="kpi-label">First LCL<sub>X&#772;</sub> Breach</div>
+            <div class="kpi-val" id="r2-val-breachhr">Hour 9</div>
+            <div class="kpi-sub">X&#772;<sub>9</sub> = 4.280 &lt; 4.281</div>
+          </div>
+          <div class="kpi-card" id="r2-kpi-badhrs">
+            <div class="kpi-label">Unstopped Breach Hours</div>
+            <div class="kpi-val" id="r2-val-badhrs">4 hrs</div>
+            <div class="kpi-sub" id="r2-sub-badhrs">Hours 9, 10, 11, 12 released</div>
+          </div>
+          <div class="kpi-card" id="r2-kpi-cost">
+            <div class="kpi-label">Total Phase II Quality Cost</div>
+            <div class="kpi-val" id="r2-val-cost">$80,000</div>
+            <div class="kpi-sub" id="r2-sub-cost">CMS Penalties + Cassette</div>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="canvas-r2" width="880" height="255"></canvas>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="sim-table" id="table-r2"></table>
+        </div>
+
+        <div class="formula-ribbon">
+          FORMULA REMINDER: Subgroup Size n = 4 &rArr; A<sub>2</sub> = 0.73, d<sub>2</sub> = 2.059 &nbsp;|&nbsp; UCL<sub>X&#772;</sub> = X&#772;&#772; + A<sub>2</sub>R&#772; &nbsp;|&nbsp; LCL<sub>X&#772;</sub> = X&#772;&#772; &minus; A<sub>2</sub>R&#772; &nbsp;|&nbsp; &sigma;&#770; = R&#772;/d<sub>2</sub>, &sigma;<sub>X&#772;</sub> = &sigma;/&radic;n
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ROUND 3 ==================== -->
+    <section class="round-panel" id="round-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Round 3: Vitamin B12 Dispersion Explosion — The "Edison Pooled-Limits Trap" (Q13–Q18)</div>
+          <div>
+            <button class="btn btn-teal btn-sm" onclick="pinRound3()">📌 Pin Current Run to Notepad</button>
+          </div>
+        </div>
+        <div class="scenario-banner">
+          <strong>Clinical Context:</strong> Daily Vitamin B12 QC subgroups of <strong>n = 5 vials</strong> (target 500 pg/mL; constants <strong>A<sub>2</sub> = 0.58, D<sub>3</sub> = 0.00, D<sub>4</sub> = 2.11</strong>) are logged across 8 days. <strong>Days 1–5</strong> ran on a validated <strong>Siemens</strong> commercial analyzer; <strong>Days 6–8</strong> were switched to <strong>Edison</strong> micro-cartridges. Audit the R-chart first and see what happens when an analyst foolishly pools all 8 days together!
+        </div>
+
+        <div class="controls-grid">
+          <div class="control-box">
+            <label for="r3-mode">1. Baseline Limit Calibration Mode</label>
+            <select id="r3-mode" onchange="runRound3()">
+              <option value="pooled">Mode A (Trap): Pool All 8 Days Together (Days 1–8 Contaminated R̄)</option>
+              <option value="clean">Mode B (Golden Rule): Clean Baseline Only (Days 1–5 Siemens Validated)</option>
+            </select>
+          </div>
+          <div class="control-box">
+            <label>2. Chart Display Mode</label>
+            <div class="pill-group">
+              <button class="pill-btn active" id="r3-btn-both" onclick="setR3View('both')">Dual View (R-Chart + X&#772;-Chart)</button>
+              <button class="pill-btn" id="r3-btn-xonly" onclick="setR3View('xonly')">X&#772;-Chart Only (Blind to Spread)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card">
+            <div class="kpi-label">Baseline Mean (X&#772;&#772;)</div>
+            <div class="kpi-val" id="r3-val-xbarbar">511.63</div>
+            <div class="kpi-sub" id="r3-sub-xbarbar">Pooled Days 1–8 (pg/mL)</div>
+          </div>
+          <div class="kpi-card" id="r3-kpi-rbar">
+            <div class="kpi-label">Baseline Mean Range (R&#772;)</div>
+            <div class="kpi-val" id="r3-val-rbar">150.00</div>
+            <div class="kpi-sub" id="r3-sub-rbar">5x inflated by Edison!</div>
+          </div>
+          <div class="kpi-card" id="r3-kpi-uclr">
+            <div class="kpi-label">R-Chart Limit (UCL<sub>R</sub>)</div>
+            <div class="kpi-val" id="r3-val-uclr">316.50</div>
+            <div class="kpi-sub">D<sub>4</sub>R&#772; = 2.11 &times; R&#772; (LCL<sub>R</sub> = 0)</div>
+          </div>
+          <div class="kpi-card" id="r3-kpi-uclx">
+            <div class="kpi-label">X&#772;-Chart Band [LCL<sub>X&#772;</sub>, UCL<sub>X&#772;</sub>]</div>
+            <div class="kpi-val" id="r3-val-uclx">[424.6, 598.6]</div>
+            <div class="kpi-sub">X&#772;&#772; &pm; 0.58 R&#772;</div>
+          </div>
+          <div class="kpi-card" id="r3-kpi-rbreach">
+            <div class="kpi-label">Days Flagged on R-Chart</div>
+            <div class="kpi-val" id="r3-val-rbreach">2 days</div>
+            <div class="kpi-sub" id="r3-sub-rbreach">Max Range R<sub>7</sub> = 390 pg/mL</div>
+          </div>
+          <div class="kpi-card" id="r3-kpi-xbreach">
+            <div class="kpi-label">Days Flagged on X&#772;-Chart</div>
+            <div class="kpi-val" id="r3-val-xbreach">0 days</div>
+            <div class="kpi-sub" id="r3-sub-xbreach">Mean shifts hidden!</div>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="canvas-r3" width="880" height="265"></canvas>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="sim-table" id="table-r3"></table>
+        </div>
+
+        <div class="formula-ribbon">
+          FORMULA REMINDER: n = 5 &rArr; A<sub>2</sub> = 0.58, D<sub>3</sub> = 0.00, D<sub>4</sub> = 2.11 &nbsp;|&nbsp; UCL<sub>R</sub> = D<sub>4</sub>R&#772;, LCL<sub>R</sub> = D<sub>3</sub>R&#772; &nbsp;|&nbsp; UCL<sub>X&#772;</sub>, LCL<sub>X&#772;</sub> = X&#772;&#772; &pm; A<sub>2</sub>R&#772; (Always audit R-Chart FIRST!)
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== ROUND 4 ==================== -->
+    <section class="round-panel" id="round-4">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Round 4: CMS Capability Audit (C<sub>p</sub>, C<sub>pk</sub>, DPMO) &amp; $100,000 Lab Turnaround Budget (Q19–Q24)</div>
+          <div>
+            <button class="btn btn-teal btn-sm" onclick="pinRound4()">📌 Pin Current Run to Notepad</button>
+          </div>
+        </div>
+        <div class="scenario-banner">
+          <strong>Part A (Calcium Assay Benchmark Inspector — Q19–Q22):</strong> Clinical CLIA tolerance limits for Serum Calcium are <strong>LSL = 8.50 mg/dL</strong> to <strong>USL = 10.50 mg/dL</strong> (target midpoint M = 9.50 mg/dL, spec width = 2.00 mg/dL). Inspect the 5 presets below to compare Siemens vs. Edison capability and expose the retroactive "Goalpost Widening" cheat.
+        </div>
+
+        <div class="control-box" style="margin-bottom:10px;">
+          <label>Part A: Select Calcium Assay Configuration to Inspect on Bell Curve</label>
+          <div class="pill-group">
+            <button class="pill-btn active" id="r4-p1" onclick="setR4Preset(1)">1. Siemens Centered (&mu;=9.50, &sigma;=0.167)</button>
+            <button class="pill-btn" id="r4-p2" onclick="setR4Preset(2)">2. Siemens +1.5&sigma; Shift (&mu;=9.75, &sigma;=0.167)</button>
+            <button class="pill-btn" id="r4-p3" onclick="setR4Preset(3)">3. Edison Actual (&mu;=9.85, &sigma;=0.55)</button>
+            <button class="pill-btn" id="r4-p4" onclick="setR4Preset(4)">4. Edison Recentered Only (&mu;=9.50, &sigma;=0.55)</button>
+            <button class="pill-btn" id="r4-p5" onclick="setR4Preset(5)">5. Theranos Cheat (Fake Specs [7.50, 12.20])</button>
+          </div>
+        </div>
+
+        <div class="fraud-banner" id="r4-fraud-banner">
+          ⚠️ CMS FEDERAL INSPECTION VIOLATION: Widening LSL/USL to [7.50, 12.20] fabricates a fake Cpk = 1.42 on paper, but 12.56% of patients (125,555 DPMO) still receive clinically misdiagnosed Calcium results outside true CLIA limits [8.50, 10.50]!
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card" id="r4-kpi-cp">
+            <div class="kpi-label">Potential Capability (C<sub>p</sub>)</div>
+            <div class="kpi-val" id="r4-val-cp">2.00</div>
+            <div class="kpi-sub">(USL &minus; LSL) / 6&sigma;</div>
+          </div>
+          <div class="kpi-card" id="r4-kpi-cpk">
+            <div class="kpi-label">Actual Capability (C<sub>pk</sub>)</div>
+            <div class="kpi-val" id="r4-val-cpk">2.00</div>
+            <div class="kpi-sub">min(C<sub>pu</sub>, C<sub>pl</sub>)</div>
+          </div>
+          <div class="kpi-card" id="r4-kpi-defpct">
+            <div class="kpi-label">Clinical Defect Rate (%)</div>
+            <div class="kpi-val" id="r4-val-defpct">0.0000%</div>
+            <div class="kpi-sub" id="r4-sub-tails">Below LSL + Above USL</div>
+          </div>
+          <div class="kpi-card" id="r4-kpi-dpmo">
+            <div class="kpi-label">Defects Per Million (DPMO)</div>
+            <div class="kpi-val" id="r4-val-dpmo">0.002</div>
+            <div class="kpi-sub" id="r4-sub-verdict">Six Sigma Capable</div>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="canvas-r4" width="880" height="225"></canvas>
+        </div>
+
+        <!-- Part B: $100,000 Capital Allocation Challenge -->
+        <div class="scenario-banner" style="margin-top:14px; background:#f3f8f4; border-left-color:var(--green);">
+          <strong>Part B ($100,000 Executive Remediation Budget across 3 Newark Lines — Q19, Q23, Q24):</strong> You have a strict <strong>$100,000 capital budget</strong> to bring all three Newark diagnostic lines to clinical capability (<strong>C<sub>pk</sub> &ge; 1.33</strong> and In Statistical Control). Choose the optimal engineering intervention for each line below:
+        </div>
+
+        <div class="controls-grid">
+          <div class="control-box">
+            <label for="r4-line1">Line 1: Thyroid TSH (LSL=90, USL=110)<br><span style="color:var(--muted);font-weight:500;">Baseline: In-Control, &mu;=105.0, &sigma;=2.0</span></label>
+            <select id="r4-line1" onchange="runR4Portfolio()">
+              <option value="none">Do Nothing ($0) &rarr; μ=105.0, σ=2.0</option>
+              <option value="recenter">Recenter Calibration Mean μ to 100.0 ($15,000) &rarr; μ=100.0, σ=2.0</option>
+              <option value="optics">Replace Photonics Module ($55,000) &rarr; μ=105.0, σ=1.2</option>
+            </select>
+          </div>
+          <div class="control-box">
+            <label for="r4-line2">Line 2: Edison Calcium (LSL=8.50, USL=10.50)<br><span style="color:var(--muted);font-weight:500;">Baseline: In-Control, &mu;=9.85, &sigma;=0.55</span></label>
+            <select id="r4-line2" onchange="runR4Portfolio()">
+              <option value="none">Do Nothing ($0) &rarr; μ=9.85, σ=0.55</option>
+              <option value="recenter">Recenter Mean μ to 9.50 Only ($10,000) &rarr; μ=9.50, σ=0.55</option>
+              <option value="upgrade">Recenter μ=9.50 + Siemens Optics Upgrade ($60,000) &rarr; μ=9.50, σ=0.25</option>
+            </select>
+          </div>
+          <div class="control-box">
+            <label for="r4-line3">Line 3: Coagulation PT/INR (LSL=10.0, USL=14.0)<br><span style="color:var(--muted);font-weight:500;">Baseline: R-Chart Out-of-Control (&mu;=12.0, &sigma;=0.90)</span></label>
+            <select id="r4-line3" onchange="runR4Portfolio()">
+              <option value="none">Do Nothing ($0) &rarr; R-Chart Out-of-Control (σ=0.90)</option>
+              <option value="recenter">Recenter Mean Knob ($10,000) &rarr; Still Out-of-Control (μ=12.0, σ=0.90)</option>
+              <option value="venous">Eliminate Finger-Stick Hemolysis Special Cause ($25,000) &rarr; In-Control, μ=12.0, σ=0.50</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="sim-table" id="table-r4-portfolio"></table>
+        </div>
+
+        <div class="kpi-row">
+          <div class="kpi-card" id="r4-port-budget">
+            <div class="kpi-label">Capital Spent (Max $100k)</div>
+            <div class="kpi-val" id="r4-val-budget">$0 / $100,000</div>
+            <div class="kpi-sub" id="r4-sub-budget">Remaining: $100,000</div>
+          </div>
+          <div class="kpi-card" id="r4-port-pass">
+            <div class="kpi-label">Lines Passing CMS (C<sub>pk</sub> &ge; 1.33)</div>
+            <div class="kpi-val" id="r4-val-pass">0 of 3 Lines</div>
+            <div class="kpi-sub" id="r4-sub-pass">Must pass all 3 within budget</div>
+          </div>
+          <div class="kpi-card" id="r4-port-dpmo">
+            <div class="kpi-label">Combined 3-Line Total DPMO</div>
+            <div class="kpi-val" id="r4-val-portdpmo">157,965.0</div>
+            <div class="kpi-sub">Sum of DPMO across Lines 1–3</div>
+          </div>
+        </div>
+
+        <div class="formula-ribbon">
+          FORMULA REMINDER: C<sub>p</sub> = (USL &minus; LSL) / 6&sigma; &nbsp;|&nbsp; C<sub>pk</sub> = min[(USL &minus; &mu;)/3&sigma;, (&mu; &minus; LSL)/3&sigma;] &nbsp;|&nbsp; High C<sub>p</sub> &gt; C<sub>pk</sub> &rArr; Recenter &mu; &nbsp;|&nbsp; Low C<sub>p</sub> &lt; 1 &rArr; Shrink &sigma;
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ==================== PERSISTENT LAB NOTEPAD ==================== -->
+  <aside>
+    <div class="notepad-card">
+      <div class="notepad-title">
+        <span>📋 MY LAB NOTEPAD (Q1–Q24)</span>
+        <button class="btn btn-danger btn-sm" onclick="clearNotepad()" title="Clear pinned logs">Clear</button>
+      </div>
+      <p style="font-size:0.73rem; color:var(--muted); margin-bottom:8px;">
+        Click <strong>"📌 Pin Current Run"</strong> in any round to save your experimental readouts here while completing the 24 Canvas Quiz questions. Auto-saved in your browser.
+      </p>
+      <div class="log-list" id="notepad-list"></div>
+    </div>
+  </aside>
+</div>
+
+<div class="toast" id="toast-msg">Copied to clipboard!</div>
+
+<script>
+// ============================================================================
+// DETERMINISTIC CLINICAL DATA & STATISTICAL ENGINE (ZERO EXTERNAL DEPENDENCIES)
+// ============================================================================
+let currentTab = 1;
+let r1StepLimit = 12;
+let r3ViewMode = 'both';
+let r4ActivePreset = 1;
+
+// Standard Normal CDF (Abramowitz & Stegun high-precision approximation, error < 7.5e-8)
+function normCDF(z) {
+  if (z < -8.0) return 0.0;
+  if (z > 8.0) return 1.0;
+  const sign = z < 0 ? -1 : 1;
+  const x = Math.abs(z) / Math.sqrt(2.0);
+  const t = 1.0 / (1.0 + 0.3275911 * x);
+  const a1 = 0.254829592, a2 = -0.284496736, a3 = 1.421413741, a4 = -1.453152027, a5 = 1.061405429;
+  const erf = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-x * x);
+  return 0.5 * (1.0 + sign * erf);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast-msg');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 2600);
+}
+
+function switchTab(tabNum) {
+  currentTab = tabNum;
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('round-' + i).classList.toggle('active', i === tabNum);
+    document.getElementById('tabbtn-' + i).classList.toggle('active', i === tabNum);
+  }
+  if (tabNum === 1) runRound1();
+  if (tabNum === 2) runRound2();
+  if (tabNum === 3) runRound3();
+  if (tabNum === 4) { setR4Preset(r4ActivePreset); runR4Portfolio(); }
+  saveState();
+}
+
+// ============================================================================
+// ROUND 1: SIGNAL VS. NOISE & TECHNICIAN TAMPERING (12 HOURS)
+// ============================================================================
+const R1_ERRORS = [1.8, -2.4, 3.1, -3.5, 2.2, -1.9, 2.8, -3.8, 3.4, -2.1, 1.5, -2.9];
+const R1_MU = 100.0;
+const R1_SIGMA = 2.0;
+const R1_LCL = 94.0;
+const R1_UCL = 106.0;
+
+function computeRound1Series(policy) {
+  const n = R1_ERRORS.length;
+  const yUntampered = R1_ERRORS.map(e => +(R1_MU + e).toFixed(2));
+  const yActual = [];
+  const offsets = [];
+  const recalAfter = [];
+  let currentOffset = 0.0;
+  let recalCount = 0;
+
+  for (let t = 0; t < n; t++) {
+    let val;
+    if (policy === 'tamper') {
+      // Standard Deming Funnel Rule 2: technician dials opposite of previous error
+      currentOffset = (t === 0) ? 0.0 : -R1_ERRORS[t - 1];
+      val = +(R1_MU + R1_ERRORS[t] + currentOffset).toFixed(2);
+      offsets.push(currentOffset);
+      if (t < n - 1) { recalCount++; recalAfter.push(true); } else { recalAfter.push(false); }
+    } else if (policy === '3sigma') {
+      currentOffset = 0.0;
+      val = +(R1_MU + R1_ERRORS[t]).toFixed(2);
+      offsets.push(0.0);
+      recalAfter.push(false);
+    } else if (policy === '1sigma') {
+      // Recalibrate if previous reading was outside [98, 102]
+      if (t > 0 && Math.abs(R1_ERRORS[t - 1]) > 2.0) {
+        currentOffset = -R1_ERRORS[t - 1];
+      } else {
+        currentOffset = 0.0;
+      }
+      val = +(R1_MU + R1_ERRORS[t] + currentOffset).toFixed(2);
+      offsets.push(currentOffset);
+      if (t < n - 1 && Math.abs(R1_ERRORS[t]) > 2.0) {
+        recalCount++;
+        recalAfter.push(true);
+      } else {
+        recalAfter.push(false);
+      }
+    } else if (policy === '2sigma') {
+      if (t > 0 && Math.abs(R1_ERRORS[t - 1]) > 4.0) {
+        currentOffset = -R1_ERRORS[t - 1];
+      } else {
+        currentOffset = 0.0;
+      }
+      val = +(R1_MU + R1_ERRORS[t] + currentOffset).toFixed(2);
+      offsets.push(currentOffset);
+      recalAfter.push(false);
+    }
+    yActual.push(val);
+  }
+
+  const mean = yActual.reduce((a, b) => a + b, 0) / n;
+  const variance = yActual.reduce((acc, v) => acc + Math.pow(v - mean, 2), 0) / (n - 1);
+  const sd = Math.sqrt(variance);
+  const minVal = Math.min(...yActual);
+  const maxVal = Math.max(...yActual);
+  const rangeVal = maxVal - minVal;
+  const breaches = yActual.filter(v => v < R1_LCL || v > R1_UCL).length;
+  const totalCost = recalCount * 500 + breaches * 5000;
+
+  return { yUntampered, yActual, offsets, recalAfter, mean, sd, minVal, maxVal, rangeVal, recalCount, breaches, totalCost };
+}
+
+function stepR1(delta) {
+  if (delta === 0) {
+    r1StepLimit = 12;
+  } else {
+    r1StepLimit = Math.max(1, Math.min(12, r1StepLimit + delta));
+  }
+  document.getElementById('r1-step-label').textContent = (r1StepLimit === 12) ? 'All 12 Hrs' : ('Hours 1–' + r1StepLimit);
+  runRound1();
+}
+
+function runRound1() {
+  const policy = document.getElementById('r1-policy').value;
+  const res = computeRound1Series(policy);
+
+  document.getElementById('r1-val-mean').textContent = res.mean.toFixed(2);
+  document.getElementById('r1-val-sd').textContent = res.sd.toFixed(2);
+  document.getElementById('r1-sub-sd').textContent = (policy === '3sigma') ? 'Baseline untampered SD' : ('vs. 2.83 untampered');
+  document.getElementById('r1-val-range').textContent = res.rangeVal.toFixed(2);
+  document.getElementById('r1-sub-minmax').textContent = '[' + res.minVal.toFixed(1) + ', ' + res.maxVal.toFixed(1) + '] mg/dL';
+  document.getElementById('r1-val-recal').textContent = res.recalCount;
+  document.getElementById('r1-sub-recal').textContent = 'Downtime cost: $' + (res.recalCount * 500).toLocaleString();
+  document.getElementById('r1-val-breach').textContent = res.breaches;
+  document.getElementById('r1-sub-breach').textContent = 'Breach penalty: $' + (res.breaches * 5000).toLocaleString();
+  document.getElementById('r1-val-cost').textContent = '$' + res.totalCost.toLocaleString();
+
+  document.getElementById('r1-kpi-sd').className = 'kpi-card ' + (res.sd > 3.5 ? 'alert' : 'good');
+  document.getElementById('r1-kpi-breach').className = 'kpi-card ' + (res.breaches > 0 ? 'alert' : 'good');
+  document.getElementById('r1-kpi-cost').className = 'kpi-card ' + (res.totalCost > 0 ? 'alert' : 'good');
+
+  // Render Table
+  let html = '<thead><tr><th>Hour (t)</th><th>Natural Noise (&epsilon;<sub>t</sub>)</th><th>Untampered (&pm;3&sigma;)</th><th>Technician Offset Applied</th><th>Actual Analyzer Output (mg/dL)</th><th>Status vs. [94.0, 106.0]</th></tr></thead><tbody>';
+  for (let t = 0; t < r1StepLimit; t++) {
+    const v = res.yActual[t];
+    const isBreach = (v < R1_LCL || v > R1_UCL);
+    html += '<tr class="' + (isBreach ? 'breach-row' : '') + '">' +
+      '<td><strong>Hour ' + (t + 1) + '</strong></td>' +
+      '<td>' + (R1_ERRORS[t] >= 0 ? '+' : '') + R1_ERRORS[t].toFixed(1) + '</td>' +
+      '<td>' + res.yUntampered[t].toFixed(1) + '</td>' +
+      '<td>' + (res.offsets[t] >= 0 ? '+' : '') + res.offsets[t].toFixed(1) + '</td>' +
+      '<td><strong>' + v.toFixed(1) + '</strong></td>' +
+      '<td>' + (isBreach ? ('⚠️ BREACH (' + (v < R1_LCL ? 'Below LCL 94' : 'Above UCL 106') + ')') : '✓ In Control') + '</td>' +
+      '</tr>';
+  }
+  html += '</tbody>';
+  document.getElementById('table-r1').innerHTML = html;
+
+  drawRound1Canvas(res);
+  saveState();
+}
+
+function drawRound1Canvas(res) {
+  const c = document.getElementById('canvas-r1');
+  const ctx = c.getContext('2d');
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const padL = 62, padR = 110, padT = 26, padB = 34;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const yMin = 91.0, yMax = 109.0;
+  const xPos = i => padL + (i / 11) * plotW;
+  const yPos = v => padT + ((yMax - v) / (yMax - yMin)) * plotH;
+
+  // Shaded In-Control Band [94, 106]
+  ctx.fillStyle = 'rgba(25, 135, 55, 0.07)';
+  ctx.fillRect(padL, yPos(106.0), plotW, yPos(94.0) - yPos(106.0));
+
+  // Grid lines
+  ctx.strokeStyle = '#e4ecf7';
+  ctx.lineWidth = 1;
+  [92, 94, 96, 98, 100, 102, 104, 106, 108].forEach(yv => {
+    const py = yPos(yv);
+    ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+    ctx.fillStyle = '#5a6b85'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(yv.toFixed(0), padL - 7, py + 4);
+  });
+
+  // UCL, CL, LCL
+  const drawLimit = (val, color, dash, label) => {
+    const py = yPos(val);
+    ctx.save();
+    ctx.strokeStyle = color; ctx.lineWidth = 2;
+    if (dash) ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+    ctx.fillStyle = color; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(label, padL + plotW + 6, py + 4);
+    ctx.restore();
+  };
+  drawLimit(106.0, '#c31e1e', false, 'UCL = 106.0');
+  drawLimit(100.0, '#0f2d5f', true, 'Target = 100.0');
+  drawLimit(94.0, '#c31e1e', false, 'LCL = 94.0');
+
+  // X-axis ticks
+  for (let i = 0; i < 12; i++) {
+    const px = xPos(i);
+    ctx.fillStyle = '#334'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('Hr ' + (i + 1), px, H - 10);
+  }
+
+  // Always draw faint untampered baseline for comparison
+  ctx.save();
+  ctx.strokeStyle = 'rgba(30, 80, 170, 0.35)';
+  ctx.lineWidth = 2;
+  ctx.setLineDash([4, 3]);
+  ctx.beginPath();
+  for (let i = 0; i < r1StepLimit; i++) {
+    const px = xPos(i), py = yPos(res.yUntampered[i]);
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+  ctx.restore();
+
+  // Draw active policy series
+  ctx.strokeStyle = '#1e50aa';
+  ctx.lineWidth = 2.6;
+  ctx.beginPath();
+  for (let i = 0; i < r1StepLimit; i++) {
+    const px = xPos(i), py = yPos(res.yActual[i]);
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  for (let i = 0; i < r1StepLimit; i++) {
+    const v = res.yActual[i];
+    const px = xPos(i), py = yPos(v);
+    const breach = (v < R1_LCL || v > R1_UCL);
+    ctx.fillStyle = breach ? '#c31e1e' : '#1e50aa';
+    ctx.beginPath(); ctx.arc(px, py, breach ? 6 : 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = breach ? '#c31e1e' : '#1a2536';
+    ctx.font = (breach ? 'bold ' : '') + '10px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(v.toFixed(1), px, v >= 100 ? py - 9 : py + 14);
+  }
+}
+
+// ============================================================================
+// ROUND 2: POTASSIUM ASSAY DRIFT & X-BAR ANDON CORD (HOURS 1–12, n = 4)
+// ============================================================================
+const R2_DATA = [
+  { hr: 1, phase: 'Phase I (Baseline)', vials: [4.38, 4.65, 4.44, 4.57], mean: 4.510, range: 0.270 },
+  { hr: 2, phase: 'Phase I (Baseline)', vials: [4.31, 4.64, 4.49, 4.52], mean: 4.490, range: 0.330 },
+  { hr: 3, phase: 'Phase I (Baseline)', vials: [4.37, 4.66, 4.48, 4.53], mean: 4.510, range: 0.290 },
+  { hr: 4, phase: 'Phase I (Baseline)', vials: [4.33, 4.64, 4.45, 4.50], mean: 4.480, range: 0.310 },
+  { hr: 5, phase: 'Phase I (Baseline)', vials: [4.36, 4.64, 4.51, 4.57], mean: 4.520, range: 0.280 },
+  { hr: 6, phase: 'Phase I (Baseline)', vials: [4.33, 4.65, 4.46, 4.52], mean: 4.490, range: 0.320 },
+  { hr: 7, phase: 'Phase II (Monitoring)', vials: [4.42, 4.55, 4.38, 4.49], mean: 4.460, range: 0.170 },
+  { hr: 8, phase: 'Phase II (Monitoring)', vials: [4.35, 4.44, 4.29, 4.36], mean: 4.360, range: 0.150 },
+  { hr: 9, phase: 'Phase II (Monitoring)', vials: [4.25, 4.38, 4.19, 4.30], mean: 4.280, range: 0.190 },
+  { hr: 10, phase: 'Phase II (Monitoring)', vials: [4.18, 4.29, 4.11, 4.22], mean: 4.200, range: 0.180 },
+  { hr: 11, phase: 'Phase II (Monitoring)', vials: [4.09, 4.22, 4.05, 4.16], mean: 4.130, range: 0.170 },
+  { hr: 12, phase: 'Phase II (Monitoring)', vials: [3.98, 4.15, 3.94, 4.05], mean: 4.030, range: 0.210 }
+];
+
+function runRound2() {
+  const a2 = parseFloat(document.getElementById('r2-n-select').value);
+  const stopHr = parseInt(document.getElementById('r2-stop-hr').value, 10);
+
+  const xBarBar = 4.500;
+  const rBar = 0.300;
+  const ucl = +(xBarBar + a2 * rBar).toFixed(3);
+  const lcl = +(xBarBar - a2 * rBar).toFixed(3);
+
+  // Determine first breach hour against current LCL
+  let firstBreachHr = null;
+  for (let i = 6; i < R2_DATA.length; i++) {
+    if (R2_DATA[i].mean < lcl) {
+      firstBreachHr = R2_DATA[i].hr;
+      break;
+    }
+  }
+
+  // Count how many out-of-control hours (true LCL = 4.281 => Hours 9, 10, 11, 12) were released before stopping
+  // When operator pulls Andon cord immediately at Hour H upon seeing sample H's QC result, patient batch H and subsequent batches are held/re-run on new cassette.
+  // Any breach hour strictly prior to stopHr (or all 4 if stopHr == 99) was released to patients!
+  // Plus if stopHr == 12 ("wait until 4.10"), Hours 9, 10, 11, 12 were all out-of-control during the shift (3 prior hours released before Hr 12 stop, or 4 total OOC hours in the log).
+  const trueLCL = 4.281;
+  const totalOOCHoursInLog = R2_DATA.filter(d => d.hr >= 7 && d.mean < trueLCL).length; // 4 hours (9, 10, 11, 12)
+  let releasedFlawedHours = 0;
+  let totalCost = 0;
+  let costNote = '';
+
+  if (stopHr === 99) {
+    releasedFlawedHours = 4; // Hours 9, 10, 11, 12
+    totalCost = releasedFlawedHours * 20000;
+    costNote = '4 OOC hrs released ($80k penalty)';
+  } else if (stopHr < 9) {
+    // Pulled too early (False Alarm before LCL breach!)
+    releasedFlawedHours = 0;
+    totalCost = 3000 + 5000; // $3k cassette + $5k premature false-alarm waste
+    costNote = 'False alarm ($3k + $5k early waste)';
+  } else if (stopHr === 9) {
+    // Pulled at exact first breach hour (Hour 9) -> halts Hour 9 release immediately!
+    releasedFlawedHours = 0;
+    totalCost = 3000;
+    costNote = 'Optimal! 0 flawed hrs + $3k cassette';
+  } else {
+    // Pulled late at Hour 10, 11, or 12 -> prior breach hours (9 .. stopHr-1) already released to patients!
+    releasedFlawedHours = stopHr - 9;
+    totalCost = 3000 + releasedFlawedHours * 20000;
+    costNote = releasedFlawedHours + ' prior OOC hr(s) released + $3k cassette';
+  }
+
+  document.getElementById('r2-val-xbarbar').textContent = xBarBar.toFixed(3);
+  document.getElementById('r2-val-ucl').textContent = ucl.toFixed(3);
+  document.getElementById('r2-val-lcl').textContent = lcl.toFixed(3);
+  document.getElementById('r2-val-breachhr').textContent = firstBreachHr ? ('Hour ' + firstBreachHr) : 'None';
+  document.getElementById('r2-val-badhrs').textContent = (stopHr === 99 ? '4 hrs (Hrs 9–12)' : (releasedFlawedHours + ' hr(s) released'));
+  document.getElementById('r2-sub-badhrs').textContent = 'Total OOC hrs in Hr 7–12 log: ' + totalOOCHoursInLog + ' (Hrs 9–12)';
+  document.getElementById('r2-val-cost').textContent = '$' + totalCost.toLocaleString();
+  document.getElementById('r2-sub-cost').textContent = costNote;
+
+  document.getElementById('r2-kpi-cost').className = 'kpi-card ' + (totalCost === 3000 ? 'good' : 'alert');
+
+  // Render Table
+  let html = '<thead><tr><th>Hour</th><th>Phase</th><th>4 Vial Readings (mmol/L)</th><th>Sample Mean (X&#772;<sub>t</sub>)</th><th>Sample Range (R<sub>t</sub>)</th><th>Chart Status vs. LCL<sub>X&#772;</sub> = ' + lcl.toFixed(3) + '</th></tr></thead><tbody>';
+  R2_DATA.forEach(d => {
+    const isBreach = d.mean < lcl;
+    const isStop = d.hr === stopHr;
+    html += '<tr class="' + (isStop ? 'selected-row' : (isBreach ? 'breach-row' : '')) + '">' +
+      '<td><strong>Hour ' + d.hr + (isStop ? ' 🛑 [CORD PULLED]' : '') + '</strong></td>' +
+      '<td>' + d.phase + '</td>' +
+      '<td>[' + d.vials.map(v => v.toFixed(2)).join(', ') + ']</td>' +
+      '<td><strong>' + d.mean.toFixed(3) + '</strong></td>' +
+      '<td>' + d.range.toFixed(2) + '</td>' +
+      '<td>' + (isBreach ? '🚨 BELOW LCL (Out of Control!)' : (d.hr >= 7 ? '↘ Drifting Downward (In Band)' : '✓ Baseline In Control')) + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('table-r2').innerHTML = html;
+
+  drawRound2Canvas(xBarBar, ucl, lcl, stopHr);
+  saveState();
+}
+
+function drawRound2Canvas(xBarBar, ucl, lcl, stopHr) {
+  const c = document.getElementById('canvas-r2');
+  const ctx = c.getContext('2d');
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const padL = 64, padR = 122, padT = 24, padB = 34;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const yMin = 3.95, yMax = 4.80;
+  const xPos = i => padL + (i / 11) * plotW;
+  const yPos = v => padT + ((yMax - v) / (yMax - yMin)) * plotH;
+
+  // Phase I vs Phase II divider
+  const divX = (xPos(5) + xPos(6)) / 2;
+  ctx.fillStyle = 'rgba(30,80,170,0.05)';
+  ctx.fillRect(padL, padT, divX - padL, plotH);
+  ctx.strokeStyle = '#8aa4c8'; ctx.setLineDash([4, 4]);
+  ctx.beginPath(); ctx.moveTo(divX, padT); ctx.lineTo(divX, padT + plotH); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = '#0f2d5f'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+  ctx.fillText('PHASE I: CALIBRATION (Hrs 1–6)', (padL + divX) / 2, padT + 12);
+  ctx.fillText('PHASE II: REAGENT DRIFT MONITORING (Hrs 7–12)', (divX + padL + plotW) / 2, padT + 12);
+
+  // Grid
+  ctx.strokeStyle = '#e4ecf7'; ctx.lineWidth = 1;
+  [4.0, 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7].forEach(yv => {
+    const py = yPos(yv);
+    ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+    ctx.fillStyle = '#5a6b85'; ctx.font = '11px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText(yv.toFixed(2), padL - 7, py + 4);
+  });
+
+  // Limits
+  const drawLim = (val, col, dash, lbl) => {
+    const py = yPos(val);
+    ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2;
+    if (dash) ctx.setLineDash([6, 4]);
+    ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+    ctx.fillStyle = col; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(lbl, padL + plotW + 6, py + 4);
+    ctx.restore();
+  };
+  drawLim(ucl, '#c31e1e', false, 'UCL = ' + ucl.toFixed(3));
+  drawLim(xBarBar, '#198737', true, 'CL = ' + xBarBar.toFixed(3));
+  drawLim(lcl, '#c31e1e', false, 'LCL = ' + lcl.toFixed(3));
+
+  // Plot line
+  ctx.strokeStyle = '#1e50aa'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  R2_DATA.forEach((d, i) => {
+    const px = xPos(i), py = yPos(d.mean);
+    if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  });
+  ctx.stroke();
+
+  R2_DATA.forEach((d, i) => {
+    const px = xPos(i), py = yPos(d.mean);
+    const breach = d.mean < lcl;
+    ctx.fillStyle = (d.hr === stopHr) ? '#d4a017' : (breach ? '#c31e1e' : '#1e50aa');
+    ctx.beginPath(); ctx.arc(px, py, (breach || d.hr === stopHr) ? 6 : 4.5, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = breach ? '#c31e1e' : '#1a2536';
+    ctx.font = (breach ? 'bold ' : '') + '10px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(d.mean.toFixed(2), px, py - 9);
+    ctx.fillStyle = '#334'; ctx.font = '11px sans-serif';
+    ctx.fillText('Hr ' + d.hr, px, H - 10);
+  });
+}
+
+// ============================================================================
+// ROUND 3: VITAMIN B12 R-CHART & CONTAMINATED POOLED LIMITS TRAP (DAYS 1–8, n=5)
+// ============================================================================
+const R3_DATA = [
+  { day: 1, machine: 'Siemens (Validated)', mean: 498.0, range: 28.0 },
+  { day: 2, machine: 'Siemens (Validated)', mean: 503.0, range: 32.0 },
+  { day: 3, machine: 'Siemens (Validated)', mean: 496.0, range: 26.0 },
+  { day: 4, machine: 'Siemens (Validated)', mean: 501.0, range: 34.0 },
+  { day: 5, machine: 'Siemens (Validated)', mean: 502.0, range: 30.0 },
+  { day: 6, machine: 'Edison (Micro-Cartridge)', mean: 545.0, range: 310.0 },
+  { day: 7, machine: 'Edison (Micro-Cartridge)', mean: 560.0, range: 390.0 },
+  { day: 8, machine: 'Edison (Micro-Cartridge)', mean: 488.0, range: 350.0 }
+];
+const R3_A2 = 0.58, R3_D3 = 0.00, R3_D4 = 2.11;
+
+function setR3View(mode) {
+  r3ViewMode = mode;
+  document.getElementById('r3-btn-both').classList.toggle('active', mode === 'both');
+  document.getElementById('r3-btn-xonly').classList.toggle('active', mode === 'xonly');
+  runRound3();
+}
+
+function runRound3() {
+  const mode = document.getElementById('r3-mode').value;
+  const baseRows = (mode === 'clean') ? R3_DATA.slice(0, 5) : R3_DATA;
+  const xBarBar = baseRows.reduce((a, d) => a + d.mean, 0) / baseRows.length;
+  const rBar = baseRows.reduce((a, d) => a + d.range, 0) / baseRows.length;
+  const uclR = +(R3_D4 * rBar).toFixed(2);
+  const lclR = +(R3_D3 * rBar).toFixed(2);
+  const uclX = +(xBarBar + R3_A2 * rBar).toFixed(2);
+  const lclX = +(xBarBar - R3_A2 * rBar).toFixed(2);
+
+  const rBreaches = R3_DATA.filter(d => d.range > uclR).map(d => 'Day ' + d.day);
+  const xBreaches = R3_DATA.filter(d => d.mean > uclX || d.mean < lclX).map(d => 'Day ' + d.day);
+
+  document.getElementById('r3-val-xbarbar').textContent = xBarBar.toFixed(2);
+  document.getElementById('r3-sub-xbarbar').textContent = (mode === 'clean') ? 'Clean Siemens Days 1–5' : 'Pooled Days 1–8';
+  document.getElementById('r3-val-rbar').textContent = rBar.toFixed(2);
+  document.getElementById('r3-sub-rbar').textContent = (mode === 'clean') ? 'True baseline range (pg/mL)' : '5x bloated by Edison!';
+  document.getElementById('r3-val-uclr').textContent = uclR.toFixed(1);
+  document.getElementById('r3-val-uclx').textContent = '[' + lclX.toFixed(1) + ', ' + uclX.toFixed(1) + ']';
+  document.getElementById('r3-val-rbreach').textContent = rBreaches.length + ' days (' + (rBreaches.join(', ') || 'None') + ')';
+  document.getElementById('r3-val-xbreach').textContent = xBreaches.length + ' days (' + (xBreaches.join(', ') || 'None') + ')';
+  document.getElementById('r3-sub-xbreach').textContent = (mode === 'clean') ? 'Days 6 & 7 shift caught!' : 'Bloated UCL_X hides shift!';
+
+  document.getElementById('r3-kpi-rbar').className = 'kpi-card ' + (mode === 'clean' ? 'good' : 'alert');
+  document.getElementById('r3-kpi-xbreach').className = 'kpi-card ' + (mode === 'clean' ? 'good' : 'warn');
+
+  let html = '<thead><tr><th>Day</th><th>Analyzer Platform</th><th>Subgroup Mean X&#772;<sub>i</sub> (pg/mL)</th><th>Subgroup Range R<sub>i</sub> (pg/mL)</th><th>R-Chart Verdict (UCL<sub>R</sub> = ' + uclR.toFixed(1) + ')</th><th>X&#772;-Chart Verdict ([' + lclX.toFixed(1) + ', ' + uclX.toFixed(1) + '])</th></tr></thead><tbody>';
+  R3_DATA.forEach(d => {
+    const rb = d.range > uclR;
+    const xb = d.mean > uclX || d.mean < lclX;
+    html += '<tr class="' + ((rb || xb) ? 'breach-row' : '') + '">' +
+      '<td><strong>Day ' + d.day + '</strong></td>' +
+      '<td>' + d.machine + '</td>' +
+      '<td><strong>' + d.mean.toFixed(1) + '</strong></td>' +
+      '<td><strong>' + d.range.toFixed(1) + '</strong></td>' +
+      '<td>' + (rb ? '🚨 BREACH (> ' + uclR.toFixed(1) + ')' : '✓ In Control') + '</td>' +
+      '<td>' + (xb ? '🚨 BREACH (> ' + uclX.toFixed(1) + ')' : '✓ Inside Band') + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('table-r3').innerHTML = html;
+
+  drawRound3Canvas(xBarBar, uclX, lclX, rBar, uclR);
+  saveState();
+}
+
+function drawRound3Canvas(xBarBar, uclX, lclX, rBar, uclR) {
+  const c = document.getElementById('canvas-r3');
+  const ctx = c.getContext('2d');
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const padL = 62, padR = 128;
+  const plotW = W - padL - padR;
+  const xPos = i => padL + (i / 7) * plotW;
+
+  if (r3ViewMode === 'xonly') {
+    // Single X-bar chart
+    const padT = 26, padB = 34, plotH = H - padT - padB;
+    const yMin = 410, yMax = 615;
+    const yPos = v => padT + ((yMax - v) / (yMax - yMin)) * plotH;
+
+    ctx.fillStyle = '#0f2d5f'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('X̄-CHART ONLY (Subgroup Means, n = 5)', padL, 16);
+
+    const drawL = (v, col, dash, lbl) => {
+      const py = yPos(v);
+      ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2; if (dash) ctx.setLineDash([5, 4]);
+      ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + plotW, py); ctx.stroke();
+      ctx.fillStyle = col; ctx.font = 'bold 11px sans-serif'; ctx.fillText(lbl, padL + plotW + 6, py + 4);
+      ctx.restore();
+    };
+    drawL(uclX, '#c31e1e', false, 'UCL_X = ' + uclX.toFixed(1));
+    drawL(xBarBar, '#198737', true, 'CL = ' + xBarBar.toFixed(1));
+    drawL(lclX, '#c31e1e', false, 'LCL_X = ' + lclX.toFixed(1));
+
+    ctx.strokeStyle = '#1e50aa'; ctx.lineWidth = 2.5; ctx.beginPath();
+    R3_DATA.forEach((d, i) => {
+      const px = xPos(i), py = yPos(d.mean);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+
+    R3_DATA.forEach((d, i) => {
+      const px = xPos(i), py = yPos(d.mean);
+      const xb = d.mean > uclX || d.mean < lclX;
+      ctx.fillStyle = xb ? '#c31e1e' : '#1e50aa';
+      ctx.beginPath(); ctx.arc(px, py, xb ? 6 : 4.5, 0, Math.PI * 2); ctx.fill();
+      ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(d.mean.toFixed(0), px, py - 9);
+      ctx.fillStyle = '#334'; ctx.fillText('Day ' + d.day, px, H - 10);
+    });
+  } else {
+    // Top Half: R-Chart (Audit First!), Bottom Half: X-Bar Chart
+    const topT = 22, topH = 95;
+    const botT = 145, botH = 92;
+    const yPosR = v => topT + ((420 - v) / 420) * topH;
+    const yPosX = v => botT + ((615 - v) / (615 - 410)) * botH;
+
+    ctx.fillStyle = '#0f2d5f'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('STEP 1: R-CHART (Subgroup Ranges R_i — Audit Dispersion First!)', padL, 14);
+    ctx.fillText('STEP 2: X̄-CHART (Subgroup Means X̄_i)', padL, 136);
+
+    // R limits
+    const pyUclR = yPosR(uclR);
+    ctx.strokeStyle = '#c31e1e'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(padL, pyUclR); ctx.lineTo(padL + plotW, pyUclR); ctx.stroke();
+    ctx.fillStyle = '#c31e1e'; ctx.font = 'bold 10px sans-serif';
+    ctx.fillText('UCL_R = ' + uclR.toFixed(1), padL + plotW + 6, pyUclR + 4);
+
+    ctx.strokeStyle = '#008080'; ctx.lineWidth = 2.2; ctx.beginPath();
+    R3_DATA.forEach((d, i) => {
+      const px = xPos(i), py = yPosR(d.range);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+    R3_DATA.forEach((d, i) => {
+      const px = xPos(i), py = yPosR(d.range);
+      const rb = d.range > uclR;
+      ctx.fillStyle = rb ? '#c31e1e' : '#008080';
+      ctx.beginPath(); ctx.arc(px, py, rb ? 5.5 : 4, 0, Math.PI * 2); ctx.fill();
+      ctx.font = 'bold 9.5px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(d.range.toFixed(0), px, py - 7);
+    });
+
+    // X limits
+    const pyUclX = yPosX(uclX), pyLclX = yPosX(lclX);
+    ctx.strokeStyle = '#c31e1e'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(padL, pyUclX); ctx.lineTo(padL + plotW, pyUclX); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(padL, pyLclX); ctx.lineTo(padL + plotW, pyLclX); ctx.stroke();
+    ctx.fillStyle = '#c31e1e'; ctx.font = 'bold 10px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText('UCL_X = ' + uclX.toFixed(1), padL + plotW + 6, pyUclX + 4);
+    ctx.fillText('LCL_X = ' + lclX.toFixed(1), padL + plotW + 6, pyLclX + 4);
+
+    ctx.strokeStyle = '#1e50aa'; ctx.lineWidth = 2.2; ctx.beginPath();
+    R3_DATA.forEach((d, i) => {
+      const px = xPos(i), py = yPosX(d.mean);
+      if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+    });
+    ctx.stroke();
+    R3_DATA.forEach((d, i) => {
+      const px = xPos(i), py = yPosX(d.mean);
+      const xb = d.mean > uclX || d.mean < lclX;
+      ctx.fillStyle = xb ? '#c31e1e' : '#1e50aa';
+      ctx.beginPath(); ctx.arc(px, py, xb ? 5.5 : 4, 0, Math.PI * 2); ctx.fill();
+      ctx.font = 'bold 9.5px sans-serif'; ctx.textAlign = 'center';
+      ctx.fillText(d.mean.toFixed(0), px, py - 7);
+      ctx.fillStyle = '#334'; ctx.font = '10.5px sans-serif';
+      ctx.fillText('Day ' + d.day, px, H - 6);
+    });
+  }
+}
+
+// ============================================================================
+// ROUND 4: PROCESS CAPABILITY (Cp, Cpk, DPMO) & $100,000 REMEDIATION PORTFOLIO
+// ============================================================================
+const R4_PRESETS = {
+  1: { name: 'Siemens Centered', mu: 9.50, sigma: 0.167, lsl: 8.50, usl: 10.50, fake: false },
+  2: { name: 'Siemens +1.5σ Shift', mu: 9.75, sigma: 0.167, lsl: 8.50, usl: 10.50, fake: false },
+  3: { name: 'Theranos Edison Actual', mu: 9.85, sigma: 0.550, lsl: 8.50, usl: 10.50, fake: false },
+  4: { name: 'Edison Recentered Only', mu: 9.50, sigma: 0.550, lsl: 8.50, usl: 10.50, fake: false },
+  5: { name: 'Theranos Fake Specs Cheat', mu: 9.85, sigma: 0.550, lsl: 7.50, usl: 12.20, fake: true }
+};
+
+function calcCapability(mu, sigma, lsl, usl) {
+  const cp = (usl - lsl) / (6.0 * sigma);
+  const cpu = (usl - mu) / (3.0 * sigma);
+  const cpl = (mu - lsl) / (3.0 * sigma);
+  const cpk = Math.min(cpu, cpl);
+  const pLow = normCDF((lsl - mu) / sigma);
+  const pHigh = 1.0 - normCDF((usl - mu) / sigma);
+  const pTot = pLow + pHigh;
+  const dpmo = pTot * 1e6;
+  return { cp, cpu, cpl, cpk, pLow, pHigh, pTot, dpmo };
+}
+
+function setR4Preset(idx) {
+  r4ActivePreset = idx;
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('r4-p' + i).classList.toggle('active', i === idx);
+  }
+  const p = R4_PRESETS[idx];
+  const m = calcCapability(p.mu, p.sigma, p.lsl, p.usl);
+
+  document.getElementById('r4-fraud-banner').style.display = p.fake ? 'block' : 'none';
+  document.getElementById('r4-val-cp').textContent = m.cp.toFixed(2);
+  document.getElementById('r4-val-cpk').textContent = m.cpk.toFixed(2);
+  document.getElementById('r4-val-defpct').textContent = (m.pTot * 100).toFixed(idx <= 2 ? 5 : 2) + '%';
+  document.getElementById('r4-sub-tails').textContent = 'LSL: ' + (m.pLow * 100).toFixed(2) + '% | USL: ' + (m.pHigh * 100).toFixed(2) + '%';
+  document.getElementById('r4-val-dpmo').textContent = (m.dpmo < 10) ? m.dpmo.toFixed(3) : Math.round(m.dpmo).toLocaleString();
+  document.getElementById('r4-sub-verdict').textContent = p.fake ? '⚠️ FRAUD (True DPMO = 125,555)' : (m.cpk >= 1.33 ? '✓ Capable (Cpk ≥ 1.33)' : '🚨 Not Capable (Cpk < 1.00)');
+
+  document.getElementById('r4-kpi-cpk').className = 'kpi-card ' + (p.fake ? 'warn' : (m.cpk >= 1.33 ? 'good' : 'alert'));
+  document.getElementById('r4-kpi-dpmo').className = 'kpi-card ' + (p.fake ? 'warn' : (m.cpk >= 1.33 ? 'good' : 'alert'));
+
+  drawRound4Canvas(p, m);
+  saveState();
+}
+
+function drawRound4Canvas(p, m) {
+  const c = document.getElementById('canvas-r4');
+  const ctx = c.getContext('2d');
+  const W = c.width, H = c.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const padL = 55, padR = 55, padT = 26, padB = 32;
+  const plotW = W - padL - padR, plotH = H - padT - padB;
+  const xMin = 7.2, xMax = 12.4;
+  const xPos = v => padL + ((v - xMin) / (xMax - xMin)) * plotW;
+
+  // Normal PDF
+  const pdf = x => Math.exp(-0.5 * Math.pow((x - p.mu) / p.sigma, 2));
+  const yPos = d => padT + (1.0 - d) * plotH;
+
+  // Shade defect tails outside true clinical [8.50, 10.50]
+  ctx.fillStyle = 'rgba(195, 30, 30, 0.28)';
+  ctx.beginPath();
+  for (let x = xMin; x <= 8.50; x += 0.02) {
+    if (x === xMin) ctx.moveTo(xPos(x), yPos(0));
+    ctx.lineTo(xPos(x), yPos(pdf(x)));
+  }
+  ctx.lineTo(xPos(8.50), yPos(0)); ctx.closePath(); ctx.fill();
+
+  ctx.beginPath();
+  for (let x = 10.50; x <= xMax; x += 0.02) {
+    if (x === 10.50) ctx.moveTo(xPos(10.50), yPos(0));
+    ctx.lineTo(xPos(x), yPos(pdf(x)));
+  }
+  ctx.lineTo(xPos(xMax), yPos(0)); ctx.closePath(); ctx.fill();
+
+  // Bell curve
+  ctx.strokeStyle = '#1e50aa'; ctx.lineWidth = 2.6;
+  ctx.beginPath();
+  for (let x = xMin; x <= xMax; x += 0.02) {
+    const px = xPos(x), py = yPos(pdf(x));
+    if (x === xMin) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // True CLIA Spec Walls [8.50, 10.50]
+  const drawWall = (val, col, dash, lbl) => {
+    const px = xPos(val);
+    ctx.save(); ctx.strokeStyle = col; ctx.lineWidth = 2.2; if (dash) ctx.setLineDash([5, 4]);
+    ctx.beginPath(); ctx.moveTo(px, padT); ctx.lineTo(px, padT + plotH); ctx.stroke();
+    ctx.fillStyle = col; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(lbl, px, padT - 7);
+    ctx.restore();
+  };
+  drawWall(8.50, '#c31e1e', false, 'CLIA LSL = 8.50');
+  drawWall(9.50, '#198737', true, 'Target M = 9.50');
+  drawWall(10.50, '#c31e1e', false, 'CLIA USL = 10.50');
+  drawWall(p.mu, '#0f2d5f', true, 'μ = ' + p.mu.toFixed(2));
+
+  if (p.fake) {
+    drawWall(7.50, '#d4a017', true, 'Fake LSL = 7.50');
+    drawWall(12.20, '#d4a017', true, 'Fake USL = 12.20');
+  }
+
+  // Axis
+  ctx.strokeStyle = '#334'; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(padL, padT + plotH); ctx.lineTo(padL + plotW, padT + plotH); ctx.stroke();
+  [7.5, 8.0, 8.5, 9.0, 9.5, 10.0, 10.5, 11.0, 11.5, 12.0].forEach(xv => {
+    const px = xPos(xv);
+    ctx.fillStyle = '#334'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(xv.toFixed(1), px, H - 10);
+  });
+}
+
+function runR4Portfolio() {
+  const c1 = document.getElementById('r4-line1').value;
+  const c2 = document.getElementById('r4-line2').value;
+  const c3 = document.getElementById('r4-line3').value;
+
+  // Line 1: TSH (LSL=90, USL=110)
+  let l1 = { name: 'Line 1: Automated Thyroid TSH', lsl: 90, usl: 110, mu: 105.0, sigma: 2.0, cost: 0, inControl: true };
+  if (c1 === 'recenter') { l1.mu = 100.0; l1.cost = 15000; }
+  if (c1 === 'optics') { l1.sigma = 1.2; l1.cost = 55000; }
+
+  // Line 2: Edison Calcium (LSL=8.50, USL=10.50)
+  let l2 = { name: 'Line 2: Edison Serum Calcium', lsl: 8.50, usl: 10.50, mu: 9.85, sigma: 0.55, cost: 0, inControl: true };
+  if (c2 === 'recenter') { l2.mu = 9.50; l2.cost = 10000; }
+  if (c2 === 'upgrade') { l2.mu = 9.50; l2.sigma = 0.25; l2.cost = 60000; }
+
+  // Line 3: Coagulation PT/INR (LSL=10.0, USL=14.0)
+  let l3 = { name: 'Line 3: Coagulation PT/INR', lsl: 10.0, usl: 14.0, mu: 12.0, sigma: 0.90, cost: 0, inControl: false };
+  if (c3 === 'recenter') { l3.cost = 10000; l3.inControl = false; }
+  if (c3 === 'venous') { l3.sigma = 0.50; l3.cost = 25000; l3.inControl = true; }
+
+  const lines = [l1, l2, l3];
+  let totalBudget = 0, passCount = 0, totalDPMO = 0;
+
+  let html = '<thead><tr><th>Diagnostic Line</th><th>SPC Status</th><th>&mu;</th><th>&sigma;</th><th>C<sub>p</sub></th><th>C<sub>pk</sub></th><th>Line DPMO</th><th>Cost</th><th>CMS Audit Verdict</th></tr></thead><tbody>';
+  lines.forEach(ln => {
+    const m = calcCapability(ln.mu, ln.sigma, ln.lsl, ln.usl);
+    totalBudget += ln.cost;
+    totalDPMO += m.dpmo;
+    const passed = ln.inControl && (m.cpk >= 1.325);
+    if (passed) passCount++;
+    html += '<tr class="' + (passed ? '' : 'breach-row') + '">' +
+      '<td><strong>' + ln.name + '</strong></td>' +
+      '<td>' + (ln.inControl ? '✓ In Control' : '🚨 R-Chart Out of Control!') + '</td>' +
+      '<td>' + ln.mu.toFixed(2) + '</td>' +
+      '<td>' + ln.sigma.toFixed(2) + '</td>' +
+      '<td><strong>' + m.cp.toFixed(2) + '</strong></td>' +
+      '<td><strong>' + m.cpk.toFixed(2) + '</strong></td>' +
+      '<td><strong>' + (m.dpmo < 100 ? m.dpmo.toFixed(1) : Math.round(m.dpmo).toLocaleString()) + '</strong></td>' +
+      '<td>$' + ln.cost.toLocaleString() + '</td>' +
+      '<td>' + (passed ? '✅ PASS (Capable & Stable)' : (!ln.inControl ? '❌ FAIL (Fix Special Cause First)' : '❌ FAIL (Cpk < 1.33)')) + '</td>' +
+      '</tr>';
+  });
+  html += '</tbody>';
+  document.getElementById('table-r4-portfolio').innerHTML = html;
+
+  const overBudget = totalBudget > 100000;
+  document.getElementById('r4-val-budget').textContent = '$' + totalBudget.toLocaleString() + ' / $100,000';
+  document.getElementById('r4-sub-budget').textContent = overBudget ? '🚨 OVER BUDGET!' : ('Remaining: $' + (100000 - totalBudget).toLocaleString());
+  document.getElementById('r4-val-pass').textContent = passCount + ' of 3 Lines';
+  document.getElementById('r4-sub-pass').textContent = (passCount === 3 && !overBudget) ? '🏆 ALL 3 LINES CMS CERTIFIED!' : 'Target: 3 of 3 within $100k';
+  document.getElementById('r4-val-portdpmo').textContent = (totalDPMO < 500) ? totalDPMO.toFixed(1) : Math.round(totalDPMO).toLocaleString();
+
+  document.getElementById('r4-port-budget').className = 'kpi-card ' + (overBudget ? 'alert' : 'good');
+  document.getElementById('r4-port-pass').className = 'kpi-card ' + ((passCount === 3 && !overBudget) ? 'good' : 'alert');
+  document.getElementById('r4-port-dpmo').className = 'kpi-card ' + ((passCount === 3 && !overBudget) ? 'good' : 'warn');
+  saveState();
+}
+
+// ============================================================================
+// LAB NOTEPAD & GEMINI CO-PILOT PROMPT EXPORT
+// ============================================================================
+let notepadLogs = [];
+
+function renderNotepad() {
+  const box = document.getElementById('notepad-list');
+  if (!notepadLogs.length) {
+    box.innerHTML = '<div style="color:var(--muted);font-style:italic;padding:8px 0;">No runs pinned yet. Test policies in Rounds 1–4 and click "📌 Pin Current Run" to record your findings here.</div>';
+    return;
+  }
+  box.innerHTML = notepadLogs.map(item =>
+    '<div class="log-item"><strong>' + item.title + '</strong>' + item.body + '</div>'
+  ).join('');
+}
+
+function pinRound1() {
+  const pol = document.getElementById('r1-policy');
+  const name = pol.options[pol.selectedIndex].text.split('(')[0].trim();
+  const res = computeRound1Series(pol.value);
+  notepadLogs.unshift({
+    title: 'Round 1 — ' + name,
+    body: 'Mean = ' + res.mean.toFixed(2) + ' | SD s = ' + res.sd.toFixed(2) + ' mg/dL | Range = ' + res.rangeVal.toFixed(2) + ' | Recals = ' + res.recalCount + ' | Breaches = ' + res.breaches + ' | Cost = $' + res.totalCost.toLocaleString()
+  });
+  renderNotepad(); saveState(); showToast('Pinned Round 1 readout to Lab Notepad!');
+}
+
+function pinRound2() {
+  const a2 = parseFloat(document.getElementById('r2-n-select').value);
+  const stopHr = document.getElementById('r2-stop-hr').value;
+  const ucl = (4.50 + a2 * 0.30).toFixed(3);
+  const lcl = (4.50 - a2 * 0.30).toFixed(3);
+  const cost = document.getElementById('r2-val-cost').textContent;
+  notepadLogs.unshift({
+    title: 'Round 2 — Potassium Drift (Stop Hr: ' + (stopHr == 99 ? 'Never' : stopHr) + ')',
+    body: 'X̄̄ = 4.500, R̄ = 0.300 | UCL = ' + ucl + ', LCL = ' + lcl + ' | First Breach = Hr 9 (4.280) | Cost = ' + cost
+  });
+  renderNotepad(); saveState(); showToast('Pinned Round 2 readout to Lab Notepad!');
+}
+
+function pinRound3() {
+  const mode = document.getElementById('r3-mode').value;
+  const rbar = document.getElementById('r3-val-rbar').textContent;
+  const uclr = document.getElementById('r3-val-uclr').textContent;
+  const uclx = document.getElementById('r3-val-uclx').textContent;
+  const xb = document.getElementById('r3-val-xbreach').textContent;
+  notepadLogs.unshift({
+    title: 'Round 3 — B12 (' + (mode === 'clean' ? 'Clean Days 1–5' : 'Pooled Days 1–8') + ')',
+    body: 'R̄ = ' + rbar + ' | UCL_R = ' + uclr + ' | X̄ Band = ' + uclx + ' | X̄ Flagged = ' + xb
+  });
+  renderNotepad(); saveState(); showToast('Pinned Round 3 readout to Lab Notepad!');
+}
+
+function pinRound4() {
+  const p = R4_PRESETS[r4ActivePreset];
+  const cp = document.getElementById('r4-val-cp').textContent;
+  const cpk = document.getElementById('r4-val-cpk').textContent;
+  const def = document.getElementById('r4-val-defpct').textContent;
+  const dpmo = document.getElementById('r4-val-dpmo').textContent;
+  const portBudget = document.getElementById('r4-val-budget').textContent;
+  const portDpmo = document.getElementById('r4-val-portdpmo').textContent;
+  notepadLogs.unshift({
+    title: 'Round 4 — ' + p.name + ' & Portfolio',
+    body: 'Preset Cp=' + cp + ', Cpk=' + cpk + ', Def=' + def + ' (' + dpmo + ' DPMO) | Portfolio: ' + portBudget + ', Total DPMO=' + portDpmo
+  });
+  renderNotepad(); saveState(); showToast('Pinned Round 4 readout to Lab Notepad!');
+}
+
+function clearNotepad() {
+  notepadLogs = [];
+  renderNotepad();
+  saveState();
+}
+
+function copyGeminiPrompt() {
+  const prompts = {
+    1: `Run Python to analyze technician tampering on a Newark blood glucose analyzer (target=100, sigma=2.0, 3-sigma limits=[94, 106]). The 12 hourly random errors are e = [1.8, -2.4, 3.1, -3.5, 2.2, -1.9, 2.8, -3.8, 3.4, -2.1, 1.5, -2.9]. Compare Policy A (Hands-off 3-sigma: Y = 100 + e), Policy B (Tampering every hour: Y_t = 100 + e_t - e_{t-1}), and Policy C (Narrow 1-sigma deadband [98, 102]). Compute mean, sample SD, range, recalibration count ($500 each), breaches outside [94, 106] ($5,000 each), and Total Quality Cost.`,
+    2: `Run Python to build an X-bar control chart for Theranos Potassium QC (n=4 vials/hr, A2=0.73, d2=2.059). Phase I baseline (Hours 1-6) gives X_double_bar = 4.500 and R_bar = 0.300. Phase II hourly subgroups (Hours 7-12) are: [[4.42,4.55,4.38,4.49], [4.35,4.44,4.29,4.36], [4.25,4.38,4.19,4.30], [4.18,4.29,4.11,4.22], [4.09,4.22,4.05,4.16], [3.98,4.15,3.94,4.05]]. Compute UCL_X, LCL_X, identify the exact hour X_bar breaches LCL_X, and compute total quality cost if cassette replacement is $3,000, early stop waste is $5,000, and unstopped breach hours cost $20,000/hr.`,
+    3: `Run Python for a Theranos Vitamin B12 QC audit (n=5, A2=0.58, D3=0, D4=2.11). Days 1-5 (Siemens): Xbar=[498,503,496,501,502], R=[28,32,26,34,30]. Days 6-8 (Edison): Xbar=[545,560,488], R=[310,390,350]. Compare Mode A (pooling all 8 days) vs Mode B (clean baseline Days 1-5) for R_bar, UCL_R, UCL_X, LCL_X, and which days breach each chart.`,
+    4: `Run Python (scipy.stats.norm) to compute Cp, Cpk, Defect %, and DPMO for Serum Calcium (LSL=8.50, USL=10.50): 1) Siemens Centered (mu=9.50, sigma=0.167), 2) Siemens +1.5*sigma shift (mu=9.75, sigma=0.167), 3) Edison Actual (mu=9.85, sigma=0.55), 4) Edison Recentered (mu=9.50, sigma=0.55), 5) Fake Specs [7.50, 12.20]. Also evaluate the $100,000 remediation budget across Line 1 TSH (LSL=90, USL=110, mu=105->100, sigma=2.0, $15k), Line 2 Calcium (mu=9.50, sigma=0.25, $60k), and Line 3 Coagulation (LSL=10, USL=14, mu=12.0, sigma=0.50, $25k).`
+  };
+  const text = prompts[currentTab];
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => showToast('Copied Round ' + currentTab + ' Gemini AI Prompt!'));
+  } else {
+    prompt('Copy this prompt for Gemini AI:', text);
+  }
+}
+
+function saveState() {
+  try {
+    const st = {
+      currentTab,
+      r1Policy: document.getElementById('r1-policy').value,
+      r2N: document.getElementById('r2-n-select').value,
+      r2Stop: document.getElementById('r2-stop-hr').value,
+      r3Mode: document.getElementById('r3-mode').value,
+      r3ViewMode,
+      r4ActivePreset,
+      r4L1: document.getElementById('r4-line1').value,
+      r4L2: document.getElementById('r4-line2').value,
+      r4L3: document.getElementById('r4-line3').value,
+      notepadLogs
+    };
+    localStorage.setItem('mgt207_theranos_sim_v1', JSON.stringify(st));
+  } catch (e) {}
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem('mgt207_theranos_sim_v1');
+    if (!raw) return;
+    const st = JSON.parse(raw);
+    if (st.r1Policy) document.getElementById('r1-policy').value = st.r1Policy;
+    if (st.r2N) document.getElementById('r2-n-select').value = st.r2N;
+    if (st.r2Stop) document.getElementById('r2-stop-hr').value = st.r2Stop;
+    if (st.r3Mode) document.getElementById('r3-mode').value = st.r3Mode;
+    if (st.r3ViewMode) r3ViewMode = st.r3ViewMode;
+    if (st.r4ActivePreset) r4ActivePreset = st.r4ActivePreset;
+    if (st.r4L1) document.getElementById('r4-line1').value = st.r4L1;
+    if (st.r4L2) document.getElementById('r4-line2').value = st.r4L2;
+    if (st.r4L3) document.getElementById('r4-line3').value = st.r4L3;
+    if (Array.isArray(st.notepadLogs)) notepadLogs = st.notepadLogs;
+    if (st.currentTab) currentTab = st.currentTab;
+  } catch (e) {}
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  loadState();
+  renderNotepad();
+  runRound1();
+  runRound2();
+  runRound3();
+  setR4Preset(r4ActivePreset);
+  runR4Portfolio();
+  switchTab(currentTab);
+});
+</script>
+</body>
+</html>
