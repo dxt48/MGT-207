@@ -643,16 +643,16 @@
         </div>
         <div class="brief-box tradeoff">
           <strong>Your Executive Mandate as Walgreens Clinical Due-Diligence Director:</strong> Theranos promised Walgreens that its entire blood test menu could run accurately on finger-stick Edison nanotainers ($C_{pk} \ge 1.33$, $\le 63.3\text{ DPMO}$, with $R$-chart In Control).<br>
-          1. First, inspect the <strong>4-Assay Finger-Stick Physics Feasibility Table</strong> below to see <em>why</em> Finger-Stick Edison is naturally capable on wide-window <strong>Fasting Glucose</strong> ($[70, 130]\text{ mg/dL} \implies C_p = 1.43$), but physically incapable on narrow-window electrolytes &amp; clotting.<br>
-          2. Second, allocate your <strong>$100,000 Remediation Budget</strong> across the <strong>3 failing Newark lab lines (Lines 1, 2, 3)</strong> so all 3 achieve <strong>In-Control $R$-Chart + $C_{pk} \ge 1.33$</strong>!
+          1. First, inspect the <strong>4-Nutrient Finger-Stick Physics Feasibility Table</strong> below to see <em>why</em> Finger-Stick Edison is naturally capable on wide-window <strong>Blood Glucose (Sugar)</strong> ($[70, 130]\text{ mg/dL} \implies C_p = 1.43$), but physically incapable on narrow-window nutrients like <strong>Blood Calcium</strong> and cell-rupture-sensitive <strong>Vitamin D</strong>.<br>
+          2. Second, allocate your <strong>$100,000 Remediation Budget</strong> across the <strong>3 failing Newark nutrient lines (Lines 1, 2, 3)</strong> so all 3 achieve <strong>In-Control $R$-Chart + $C_{pk} \ge 1.33$</strong>!
         </div>
 
         <div class="data-table-wrap" style="margin-bottom:14px;">
           <table class="sim-table">
             <thead>
               <tr>
-                <th>Contract Assay</th>
-                <th>CLIA Spec Window [LSL, USL]</th>
+                <th>Nutrient Test</th>
+                <th>Medical Spec Window [LSL, USL]</th>
                 <th>Finger-Stick Edison Status (&mu;, &sigma;)</th>
                 <th>Finger-Stick Cp / Cpk</th>
                 <th>Walgreens Physics Feasibility Verdict</th>
@@ -660,32 +660,32 @@
             </thead>
             <tbody>
               <tr class="row-highlight">
-                <td><strong>0. Fasting Glucose</strong></td>
+                <td><strong>0. Blood Glucose (Sugar)</strong></td>
                 <td>[70.0, 130.0] mg/dL (Width = 60.0)</td>
                 <td>R In Control; &mu; = 100.0, &sigma; = 7.0</td>
                 <td><strong>Cp = 1.43, Cpk = 1.43</strong> (17.8 DPMO)</td>
                 <td>&#9989; <strong>APPROVE on Finger-Stick</strong> (Wide 60 mg/dL clinical window absorbs micro-drop noise)</td>
               </tr>
               <tr>
-                <td><strong>Line 1: Thyroid TSH</strong></td>
-                <td>[90.0, 110.0] mIU/L (Width = 20.0)</td>
+                <td><strong>Line 1: Blood Iron</strong></td>
+                <td>[90.0, 110.0] &mu;g/dL (Width = 20.0)</td>
                 <td>R In Control; &mu; = 105.0, &sigma; = 2.0</td>
                 <td><strong>Cp = 1.67, Cpk = 0.83</strong> (6,210 DPMO)</td>
                 <td>&#9888;&#65039; <strong>Needs $15k Calibration Recentering</strong> (&sigma;=2.0 is tight, only &mu; is off-center)</td>
               </tr>
               <tr class="row-breach">
-                <td><strong>Line 2: Serum Calcium</strong></td>
+                <td><strong>Line 2: Blood Calcium</strong></td>
                 <td>[8.50, 10.50] mg/dL (Width = 2.00)</td>
                 <td>R In Control; &mu; = 9.85, &sigma; = 0.55</td>
                 <td><strong>Cp = 0.61, Cpk = 0.39</strong> (125,555 DPMO)</td>
                 <td>&#10060; <strong>REJECT Finger-Stick!</strong> (6&sigma; = 3.30 &gt; 2.00 window; must reroute to Venous Siemens)</td>
               </tr>
               <tr class="row-breach">
-                <td><strong>Line 3: Coag PT/INR</strong></td>
-                <td>[10.0, 14.0] sec (Width = 4.0)</td>
-                <td><strong>R-Chart OUT OF CONTROL!</strong> (&mu;=12.0, &sigma;=0.90)</td>
+                <td><strong>Line 3: Vitamin D</strong></td>
+                <td>[30.0, 50.0] ng/mL (Width = 20.0)</td>
+                <td><strong>R-Chart OUT OF CONTROL!</strong> (&mu;=40.0, &sigma;=4.50)</td>
                 <td><strong>Invalid (0.74)</strong> (26,355 DPMO)</td>
-                <td>&#10060; <strong>HALT Finger-Stick!</strong> (Finger squeezing causes hemolysis/clotting special cause on R)</td>
+                <td>&#10060; <strong>HALT Finger-Stick!</strong> (Squeezing finger bursts cells &amp; contaminates drop on R-Chart)</td>
               </tr>
             </tbody>
           </table>
@@ -695,7 +695,7 @@
           <!-- Line 1 -->
           <div class="line-card">
             <h4>
-              <span>Line 1: Automated Thyroid TSH Assay (Specs [90.0, 110.0], R-Chart In Control, Baseline &mu; = 105.0, &sigma; = 2.0)</span>
+              <span>Line 1: Blood Iron Assay (Specs [90.0, 110.0] &mu;g/dL, R-Chart In Control, Baseline &mu; = 105.0, &sigma; = 2.0)</span>
               <span id="l1-status-badge"></span>
             </h4>
             <div class="controls-row">
@@ -708,7 +708,7 @@
           <!-- Line 2 -->
           <div class="line-card">
             <h4>
-              <span>Line 2: Serum Calcium Assay (Specs [8.50, 10.50], R-Chart In Control, Edison &mu; = 9.85, &sigma; = 0.55)</span>
+              <span>Line 2: Blood Calcium Assay (Specs [8.50, 10.50] mg/dL, R-Chart In Control, Edison &mu; = 9.85, &sigma; = 0.55)</span>
               <span id="l2-status-badge"></span>
             </h4>
             <div class="controls-row">
@@ -722,13 +722,13 @@
           <!-- Line 3 -->
           <div class="line-card">
             <h4>
-              <span>Line 3: Coagulation PT/INR Assay (Specs [10.0, 14.0], R-Chart OUT OF CONTROL from Finger-Stick Clotting, &mu; = 12.0, &sigma; = 0.90)</span>
+              <span>Line 3: Vitamin D Assay (Specs [30.0, 50.0] ng/mL, R-Chart OUT OF CONTROL from Finger-Stick Cell Rupture, &mu; = 40.0, &sigma; = 4.50)</span>
               <span id="l3-status-badge"></span>
             </h4>
             <div class="controls-row">
-              <button class="policy-btn danger" id="l3-opt-0" onclick="setLineOpt(3,0)">Keep Finger-Stick Draw ($0) &rarr; R-Chart OOC / Invalid</button>
-              <button class="policy-btn danger" id="l3-opt-1" onclick="setLineOpt(3,1)">Software Outlier Filter ($10,000) &rarr; Masks R-Chart, True &sigma;=0.90 (Fails!)</button>
-              <button class="policy-btn success active" id="l3-opt-2" onclick="setLineOpt(3,2)">Eliminate Finger-Stick Hemolysis via Venous Citrate Tube (&sigma;&rarr;0.50, $25,000) &rarr; R In Control &amp; Cpk = 1.33</button>
+              <button class="policy-btn danger" id="l3-opt-0" onclick="setLineOpt(3,0)">Keep Finger-Stick Draw ($0) &rarr; R-Chart Out of Control / Invalid</button>
+              <button class="policy-btn danger" id="l3-opt-1" onclick="setLineOpt(3,1)">Software Outlier Filter ($10,000) &rarr; Masks R-Chart, True &sigma;=4.50 (Fails!)</button>
+              <button class="policy-btn success active" id="l3-opt-2" onclick="setLineOpt(3,2)">Eliminate Finger-Stick Cell Rupture via Venous Draw Tube (&sigma;&rarr;2.50, $25,000) &rarr; R In Control &amp; Cpk = 1.33</button>
             </div>
           </div>
         </div>
@@ -1622,11 +1622,11 @@ Part A (Q13-Q16): Compare Mode A (Pooled Days 1-8) vs Mode B (Clean Baseline Day
 Part B (Q17-Q18): On Day 8, the 5 individual vials are [310, 495, 485, 660, 490] (true reference = 500 pg/mL; clinical misdiagnosis outside [400, 600] pg/mL). Compute how many vials cause patient misdiagnosis despite Xbar_8 = 488.0 sitting inside clean X-bar limits, and show what happens to R_8 if management cherry-picks (deletes) Vials #1 (310) and #4 (660).`,
 
     4: `Run Python (scipy.stats.norm) to analyze Round 4 (Walgreens Due-Diligence & $100k Capability Showdown, Q19-Q24):
-Part A (Q19-Q21): Calcium Assay [LSL=8.50, USL=10.50 mg/dL]. Compute Cp, Cpk, Defect %, and DPMO for:
+Part A (Q19-Q21): Blood Calcium Assay [LSL=8.50, USL=10.50 mg/dL]. Compute Cp, Cpk, Defect %, and DPMO for:
 1) Siemens Centered (mu=9.50, sig=0.167), 2) Siemens +1.5*sigma Shift (mu=9.75, sig=0.167), 3) Edison Actual (mu=9.85, sig=0.55), 4) Edison Recentered Only (mu=9.50, sig=0.55), 5) Fake Specs Cheat [7.50, 12.20] with mu=9.85, sig=0.55.
 Part B (Q22-Q24):
-- Verify Finger-Stick Fasting Glucose ([70, 130] mg/dL, mu=100, sig=7.0 -> Cp=Cpk=1.43, 17.8 DPMO) vs Calcium/Potassium/PT-INR.
-- Find the optimal $100,000 remediation portfolio across Line 1 (TSH [90,110], mu=105, sig=2.0 -> Recenter mu=100 for $15k), Line 2 (Calcium [8.5,10.5], mu=9.85, sig=0.55 -> Reroute to Venous Siemens mu=9.50, sig=0.25 for $60k), and Line 3 (Coag PT/INR [10,14], R-chart OOC sig=0.90 -> Fix Hemolysis Special Cause via Venous Citrate Tube sig=0.50 for $25k), and compute the final Combined 3-Line DPMO.`
+- Verify Finger-Stick Blood Glucose ([70, 130] mg/dL, mu=100, sig=7.0 -> Cp=Cpk=1.43, 17.8 DPMO) vs Blood Calcium / Potassium / Vitamin D.
+- Find the optimal $100,000 remediation portfolio across Line 1 (Blood Iron [90,110], mu=105, sig=2.0 -> Recenter mu=100 for $15k), Line 2 (Blood Calcium [8.5,10.5], mu=9.85, sig=0.55 -> Reroute to Venous Siemens mu=9.50, sig=0.25 for $60k), and Line 3 (Vitamin D [30,50], R-chart Out of Control sig=4.50 -> Fix Finger-Stick Cell Rupture via Venous Draw Tube sig=2.50 for $25k), and compute the final Combined 3-Line DPMO.`
   };
   navigator.clipboard.writeText(prompts[r] || '');
   const btn = document.getElementById('gem-btn-'+r);
