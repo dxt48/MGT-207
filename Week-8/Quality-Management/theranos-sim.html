@@ -418,7 +418,7 @@
           <span class="part-tag">Canvas Quiz Q1&ndash;Q3</span>
         </div>
         <div class="brief-box">
-          <strong>Clinical Context:</strong> You are auditing the Newark Fasting Glucose line ($\mu_0 = 100.0\text{ mg/dL}$, natural common-cause noise $\sigma = 2.0\text{ mg/dL}$, $\pm 3\sigma\text{ limits} = [94.0, 106.0]\text{ mg/dL}$). Each manual recalibration costs <strong>$500</strong> in downtime, and each hour that breaches outside $[94.0, 106.0]\text{ mg/dL}$ causes <strong>$5,000</strong> in false diabetic diagnoses. Compare the 3 technician operating policies below:
+          <strong>Clinical Context:</strong> You are auditing the Newark Blood Glucose line (&mu;<sub>0</sub> = 100.0 mg/dL, natural common-cause noise &sigma; = 2.0 mg/dL, &plusmn;3&sigma; limits = [94.0, 106.0] mg/dL). Each manual recalibration costs <strong>$500</strong> in downtime, and each hour that breaches outside [94.0, 106.0] mg/dL causes <strong>$5,000</strong> in false diabetic diagnoses. Compare the 3 technician operating policies below:
         </div>
 
         <div class="controls-row">
@@ -426,7 +426,7 @@
             Policy A: &plusmn;3&sigma; Deadband [94.0, 106.0] (Hands-Off)
           </button>
           <button class="policy-btn danger" id="r1a-btn-B" onclick="setR1Policy('B')">
-            Policy B: Full Tampering Every Hour (Y_t = 100 + e_t &minus; e_{t-1})
+            Policy B: Full Tampering Every Hour (Y<sub>t</sub> = 100 + e<sub>t</sub> &minus; e<sub>t&minus;1</sub>)
           </button>
           <button class="policy-btn amber" id="r1a-btn-C" onclick="setR1Policy('C')">
             Policy C: Narrow &plusmn;1&sigma; Deadband [98.0, 102.0]
@@ -449,9 +449,9 @@
           <span class="part-tag part-b">Canvas Quiz Q4&ndash;Q6</span>
         </div>
         <div class="brief-box tradeoff">
-          <strong>The Walgreens Managerial Dilemma:</strong> Why not set control limits super wide ($\pm 4\sigma$) so technicians never get false alarms? Because real analyzers can suffer assignable hardware shifts! Suppose <strong>Hours 1&ndash;8</strong> have pure common-cause noise ($\mu_0 = 100.0\text{ mg/dL}$), and at <strong>Hour 9</strong> a cooling fan glitch causes an assignable <strong>$+4.2\text{ mg/dL}$ thermal drift</strong> ($\mu_1 = 104.2\text{ mg/dL}$ for Hours 9&ndash;12 unless caught).<br>
+          <strong>The Walgreens Managerial Dilemma:</strong> Why not set control limits super wide (&plusmn;4&sigma;) so technicians never get false alarms? Because real analyzers can suffer assignable hardware shifts! Suppose <strong>Hours 1&ndash;8</strong> have pure common-cause noise (&mu;<sub>0</sub> = 100.0 mg/dL), and at <strong>Hour 9</strong> a cooling fan glitch causes an assignable <strong>+4.2 mg/dL thermal drift</strong> (&mu;<sub>1</sub> = 104.2 mg/dL for Hours 9&ndash;12 unless caught).<br>
           &bull; <strong>Type I False Alarm Cost (Hours 1&ndash;8):</strong> Halting the line during stable Hours 1&ndash;8 costs <strong>$2,500 per false alarm</strong>.<br>
-          &bull; <strong>True Shift Repair vs. Type II Missed-Shift Cost (Hours 9&ndash;12):</strong> Catching the shift in Hours 9&ndash;12 triggers a one-time <strong>$1,500 maintenance reset</strong> (fixing remaining hours); every hour in Hours 9&ndash;12 that the $+4.2\text{ mg/dL}$ shift goes undetected costs Walgreens <strong>$12,000/hr</strong> in misdiagnosed patient labs!
+          &bull; <strong>True Shift Repair vs. Type II Missed-Shift Cost (Hours 9&ndash;12):</strong> Catching the shift in Hours 9&ndash;12 triggers a one-time <strong>$1,500 maintenance reset</strong> (fixing remaining hours); every hour in Hours 9&ndash;12 that the +4.2 mg/dL shift goes undetected costs Walgreens <strong>$12,000/hr</strong> in misdiagnosed patient labs!
         </div>
 
         <div class="controls-row">
@@ -478,12 +478,12 @@
     <div class="round-panel" id="panel-2">
       <div class="card">
         <div class="card-title">
-          <span>Round 2 &bull; Part A: Potassium Reagent Drift &amp; Live Andon Cord Challenge (n = 4 Vials/Hr)</span>
+          <span>Round 2 &bull; Part A: Potassium Reagent Drift &amp; Live Stop Cord Challenge (n = 4 Vials/Hr)</span>
           <span class="part-tag">Canvas Quiz Q7&ndash;Q9</span>
         </div>
         <div class="brief-box">
-          <strong>Clinical Context:</strong> Phase I baseline (Hours 1&ndash;6, $n = 4$ plasma control vials/hr $\implies A_2 = 0.73, d_2 = 2.059$) establishes $\bar{\bar{X}} = 4.500\text{ mmol/L}$ and $\bar{R} = 0.300\text{ mmol/L}$. In Phase II (Hours 7&ndash;12), an unrefrigerated reagent cassette begins decaying.<br>
-          &bull; <strong>Andon Cord Cost Rules:</strong> Replacing the reagent cassette costs <strong>$3,000</strong>. Pulling the cord <em>before</em> $\bar{X}_t$ breaches $\text{LCL}_{\bar{X}}$ incurs a <strong>$5,000 premature-stop waste penalty</strong> (Type I error). Every out-of-control hour ($\bar{X}_t < \text{LCL}_{\bar{X}}$) released <em>before</em> you pull the cord incurs a <strong>$20,000 CMS patient-harm penalty</strong>!
+          <strong>Clinical Context:</strong> Phase I baseline (Hours 1&ndash;6, n = 4 plasma control vials/hr &rarr; A<sub>2</sub> = 0.73, d<sub>2</sub> = 2.059) establishes Grand Mean X&#772;&#772; = 4.500 mmol/L and Average Range R&#772; = 0.300 mmol/L. In Phase II (Hours 7&ndash;12), an unrefrigerated reagent cassette begins decaying.<br>
+          &bull; <strong>Stop Cord Cost Rules:</strong> Replacing the reagent cassette costs <strong>$3,000</strong>. Pulling the cord <em>before</em> X&#772;<sub>t</sub> breaches LCL<sub>X</sub> incurs a <strong>$5,000 premature-stop waste penalty</strong> (Type I error). Every out-of-control hour (X&#772;<sub>t</sub> &lt; LCL<sub>X</sub>) released <em>before</em> you pull the cord incurs a <strong>$20,000 patient-harm penalty</strong>!
         </div>
 
         <div class="controls-row">
@@ -493,7 +493,7 @@
         </div>
 
         <div class="controls-row">
-          <span style="font-size:0.82rem;font-weight:700;color:var(--navy);">Pull Andon Cord &amp; Halt Line After:</span>
+          <span style="font-size:0.82rem;font-weight:700;color:var(--navy);">Pull Stop Cord &amp; Halt Line After:</span>
           <button class="policy-btn amber" id="r2-pull-7" onclick="setR2Pull(7)">Hour 7</button>
           <button class="policy-btn amber" id="r2-pull-8" onclick="setR2Pull(8)">Hour 8</button>
           <button class="policy-btn success active" id="r2-pull-9" onclick="setR2Pull(9)">Hour 9</button>
@@ -517,9 +517,9 @@
           <span class="part-tag part-b">Canvas Quiz Q10&ndash;Q12</span>
         </div>
         <div class="brief-box tradeoff">
-          <strong>The Walgreens Appraisal vs. Failure Trade-Off:</strong> Why run $n = 4$ control vials per hour instead of saving money with $n = 2$, or running $n = 10$? Because $\sigma_{\bar{X}} = \sigma/\sqrt{n}$!<br>
-          &bull; <strong>Appraisal Cost:</strong> Each preserved plasma control vial costs <strong>$100/vial</strong> across all 12 hours ($\text{Appraisal Cost} = 12 \times n \times \$100$).<br>
-          &bull; <strong>Detection Sensitivity vs. Patient Harm:</strong> Clinically dangerous potassium drift begins at <strong>Hour 9</strong> ($\bar{X}_9 = 4.280\text{ mmol/L}$). If your subgroup size $n$ is too small, $\text{LCL}_{\bar{X}} = \bar{\bar{X}} - A_2\bar{R}$ is so wide that dangerous hours slip through undetected at <strong>$20,000/hr</strong> before the alarm sounds (plus <strong>$3,000</strong> cassette replacement upon detection)!
+          <strong>The Walgreens Appraisal vs. Failure Trade-Off:</strong> Why run n = 4 control vials per hour instead of saving money with n = 2, or running n = 10? Because standard error shrinks by &radic;n (&sigma;<sub>X&#772;</sub> = &sigma; / &radic;n)!<br>
+          &bull; <strong>Appraisal Cost:</strong> Each preserved plasma control vial costs <strong>$100/vial</strong> across all 12 hours (Appraisal Cost = 12 &times; n &times; $100).<br>
+          &bull; <strong>Detection Sensitivity vs. Patient Harm:</strong> Clinically dangerous potassium drift begins at <strong>Hour 9</strong> (X&#772;<sub>9</sub> = 4.280 mmol/L). If your subgroup size n is too small, LCL<sub>X</sub> = X&#772;&#772; &minus; A<sub>2</sub>R&#772; is so wide that dangerous hours slip through undetected at <strong>$20,000/hr</strong> before the alarm sounds (plus <strong>$3,000</strong> cassette replacement upon detection)!
         </div>
 
         <div class="controls-row">
@@ -550,7 +550,7 @@
           <span class="part-tag">Canvas Quiz Q13&ndash;Q16</span>
         </div>
         <div class="brief-box">
-          <strong>Clinical Context:</strong> Theranos executives hand Walgreens an 8-day Vitamin B12 QC report ($n = 5\text{ vials/day} \implies A_2 = 0.58, D_3 = 0.00, D_4 = 2.11$; target $= 500.0\text{ pg/mL}$). Days 1&ndash;5 were run on a validated <strong>Siemens</strong> analyzer; Days 6&ndash;8 were transferred to <strong>Edison</strong> nanotainers. Compare Theranos's pooled report (Mode A) against a proper Phase I baseline audit (Mode B) and open the $R$-Chart Inspector:
+          <strong>Clinical Context:</strong> Theranos executives hand Walgreens an 8-day Vitamin B12 QC report (n = 5 vials/day &rarr; A<sub>2</sub> = 0.58, D<sub>3</sub> = 0.00, D<sub>4</sub> = 2.11; target = 500.0 pg/mL). Days 1&ndash;5 were run on a validated <strong>Siemens</strong> analyzer; Days 6&ndash;8 were transferred to <strong>Edison</strong> micro-vials. Compare Theranos's pooled report (Mode A) against a proper Phase I baseline audit (Mode B) and open the R-Chart Inspector:
         </div>
 
         <div class="controls-row">
@@ -584,7 +584,7 @@
           <span class="part-tag part-b">Canvas Quiz Q17&ndash;Q18</span>
         </div>
         <div class="brief-box tradeoff">
-          <strong>Forensic Deep-Dive into Edison Day 8:</strong> Why did <strong>Day 8</strong> ($\bar{X}_8 = 488.0\text{ pg/mL}$) pass inside the clean $\bar{X}$-chart limits $[482.6, 517.4]\text{ pg/mL}$ while failing the $R$-chart ($R_8 = 350.0 > 63.3$)? Inspect the 5 raw control vials on Day 8 below (all drawn from a true $500.0\text{ pg/mL}$ reference plasma, where any reading outside <strong>$[400.0, 600.0]\text{ pg/mL}$</strong> causes a clinical patient misdiagnosis), and test what happens when management illegally <strong>cherry-picks (deletes)</strong> the extreme vials:
+          <strong>Forensic Deep-Dive into Edison Day 8:</strong> Why did <strong>Day 8</strong> (X&#772;<sub>8</sub> = 488.0 pg/mL) pass inside the clean X-bar chart limits [482.6, 517.4] pg/mL while failing the R-chart (R<sub>8</sub> = 350.0 &gt; 63.3)? Inspect the 5 raw control vials on Day 8 below (all drawn from a true 500.0 pg/mL reference plasma, where any reading outside <strong>[400.0, 600.0] pg/mL</strong> causes a clinical patient misdiagnosis), and test what happens when management illegally <strong>cherry-picks (deletes)</strong> the extreme vials:
         </div>
 
         <div class="controls-row">
@@ -613,11 +613,11 @@
     <div class="round-panel" id="panel-4">
       <div class="card">
         <div class="card-title">
-          <span>Round 4 &bull; Part A: Serum Calcium Capability Benchmark &mdash; Can Edison Deliver Clinical Accuracy?</span>
+          <span>Round 4 &bull; Part A: Blood Calcium Capability Benchmark &mdash; Can Edison Deliver Clinical Accuracy?</span>
           <span class="part-tag">Canvas Quiz Q19&ndash;Q21</span>
         </div>
         <div class="brief-box">
-          <strong>Clinical Context:</strong> Human blood calcium must sit inside a tight physiological specification window $[\text{LSL} = 8.50,\ \text{USL} = 10.50]\text{ mg/dL}$ (Target $M = 9.50\text{ mg/dL}$, tolerance width $= 2.00\text{ mg/dL}$). Test the 5 presets below to see whether software recalibration ($\mu$) can make the finger-stick Edison analyzer ($\sigma = 0.55\text{ mg/dL}$) clinically capable ($C_{pk} \ge 1.33$):
+          <strong>Clinical Context:</strong> Human blood calcium must sit inside a tight physiological specification window [LSL = 8.50, USL = 10.50] mg/dL (Target M = 9.50 mg/dL, tolerance width = 2.00 mg/dL). Test the 5 presets below to see whether software recalibration (&mu;) can make the finger-stick Edison analyzer (&sigma; = 0.55 mg/dL) clinically capable (C<sub>pk</sub> &ge; 1.33):
         </div>
 
         <div class="controls-row">
@@ -638,13 +638,13 @@
       <!-- PART B: WALGREENS CONTRACT DUE-DILIGENCE & $100,000 REMEDIATION PORTFOLIO -->
       <div class="card">
         <div class="card-title">
-          <span>Round 4 &bull; Part B: Walgreens Executive Due-Diligence &mdash; Which Assays Can Run on Finger-Stick vs. Venous ($100k Budget)</span>
+          <span>Round 4 &bull; Part B: Walgreens Executive Due-Diligence &mdash; Which Nutrient Tests Can Run on Finger-Stick vs. Venous ($100k Budget)</span>
           <span class="part-tag part-b">Canvas Quiz Q22&ndash;Q24</span>
         </div>
         <div class="brief-box tradeoff">
-          <strong>Your Executive Mandate as Walgreens Clinical Due-Diligence Director:</strong> Theranos promised Walgreens that its entire blood test menu could run accurately on finger-stick Edison nanotainers ($C_{pk} \ge 1.33$, $\le 63.3\text{ DPMO}$, with $R$-chart In Control).<br>
-          1. First, inspect the <strong>4-Nutrient Finger-Stick Physics Feasibility Table</strong> below to see <em>why</em> Finger-Stick Edison is naturally capable on wide-window <strong>Blood Glucose (Sugar)</strong> ($[70, 130]\text{ mg/dL} \implies C_p = 1.43$), but physically incapable on narrow-window nutrients like <strong>Blood Calcium</strong> and cell-rupture-sensitive <strong>Vitamin D</strong>.<br>
-          2. Second, allocate your <strong>$100,000 Remediation Budget</strong> across the <strong>3 failing Newark nutrient lines (Lines 1, 2, 3)</strong> so all 3 achieve <strong>In-Control $R$-Chart + $C_{pk} \ge 1.33$</strong>!
+          <strong>Your Executive Mandate as Walgreens Clinical Due-Diligence Director:</strong> Theranos promised Walgreens that its entire blood test menu could run accurately on finger-stick Edison micro-vials (C<sub>pk</sub> &ge; 1.33, &le; 63.3 DPMO, with R-chart In Control).<br>
+          1. First, inspect the <strong>4-Nutrient Finger-Stick Physics Feasibility Table</strong> below to see <em>why</em> Finger-Stick Edison is naturally capable on wide-window <strong>Blood Glucose (Sugar)</strong> ([70, 130] mg/dL &rarr; C<sub>p</sub> = 1.43), but physically incapable on narrow-window nutrients like <strong>Blood Calcium</strong> and cell-rupture-sensitive <strong>Vitamin D</strong>.<br>
+          2. Second, allocate your <strong>$100,000 Remediation Budget</strong> across the <strong>3 failing Newark nutrient lines (Lines 1, 2, 3)</strong> so all 3 achieve <strong>In-Control R-Chart + C<sub>pk</sub> &ge; 1.33</strong>!
         </div>
 
         <div class="data-table-wrap" style="margin-bottom:14px;">
@@ -751,15 +751,15 @@
         <span>&#128221; Walgreens Auditor Notepad</span>
         <button onclick="clearNotepad()" style="font-size:0.7rem;padding:2px 6px;cursor:pointer;">Clear</button>
       </h3>
-      <p>Auto-saved in your browser (`localStorage`). Record your answers for Canvas Quiz Q1&ndash;Q24 here:</p>
+      <p>Auto-saved in your browser (localStorage). Record your answers for Canvas Quiz Q1&ndash;Q24 here:</p>
       <textarea id="lab-notepad" class="notepad-area" placeholder="Round 1 (Q1-Q6):&#10;Q1: &#10;Q2: &#10;...&#10;&#10;Round 2 (Q7-Q12):&#10;...&#10;&#10;Round 3 (Q13-Q18):&#10;...&#10;&#10;Round 4 (Q19-Q24):&#10;..."></textarea>
       <div class="formula-Quick">
         <strong>SPC &amp; Capability Quick Reference:</strong><br>
-        &bull; $\sigma_{\text{tamp}} = \sqrt{2}\sigma \approx 1.414\sigma$<br>
-        &bull; $\text{LCL}_R, \text{UCL}_R = (D_3\bar{R},\ D_4\bar{R})$<br>
-        &bull; $\text{LCL}_{\bar{X}}, \text{UCL}_{\bar{X}} = \bar{\bar{X}} \pm A_2\bar{R}$<br>
-        &bull; $C_p = \frac{\text{USL}-\text{LSL}}{6\sigma}$<br>
-        &bull; $C_{pk} = \min\left\{\frac{\text{USL}-\mu}{3\sigma}, \frac{\mu-\text{LSL}}{3\sigma}\right\}$
+        &bull; &sigma;<sub>tampered</sub> = &radic;2 &middot; &sigma; &approx; 1.414&sigma;<br>
+        &bull; LCL<sub>R</sub>, UCL<sub>R</sub> = (D<sub>3</sub>R&#772;, D<sub>4</sub>R&#772;)<br>
+        &bull; LCL<sub>X</sub>, UCL<sub>X</sub> = X&#772;&#772; &plusmn; A<sub>2</sub>R&#772;<br>
+        &bull; C<sub>p</sub> = (USL &minus; LSL) / (6&sigma;)<br>
+        &bull; C<sub>pk</sub> = min{ (USL &minus; &mu;) / (3&sigma;), (&mu; &minus; LSL) / (3&sigma;) }
       </div>
     </div>
   </div>
