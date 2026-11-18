@@ -901,9 +901,10 @@
           <!-- FINAL COPY BLOCK FOR CANVAS Q25 -->
           <div id="r5-final-export-wrap" style="margin-top:14px;">
             <div class="gemini-bar" style="background:#eefaf3;border-color:var(--green);">
-              <span>&#127942; <strong>Ready for Canvas Quiz Question 25!</strong> Copy your verified memo, AI Coach rubric score, and telemetry token below and paste into Q25 on Canvas:</span>
-              <button class="btn-gemini" style="background:var(--green);" onclick="copyCanvasQ25Submission()" id="btn-copy-q25">&#128203; Copy Verified Memo + AI Coach Report for Canvas Q25</button>
+              <span>&#127942; <strong>Ready for Canvas Quiz Question 25!</strong> Copy your verified memo &amp; AI Coach report below:</span>
+              <button class="btn-gemini" style="background:var(--green);" onclick="copyCanvasQ25Submission()" id="btn-copy-q25">&#128203; Copy Verified Memo + AI Coach Report</button>
             </div>
+            <textarea id="r5-report-preview" readonly onclick="this.select()" style="display:none;width:100%;height:115px;margin-top:8px;padding:8px;font-family:monospace;font-size:0.74rem;border:1px solid var(--green);border-radius:6px;background:#f8fff9;"></textarea>
           </div>
         </div>
       </div>
@@ -1779,6 +1780,30 @@ function drawR4AChart(P) {
 // ============================================================================
 // GEMINI AI PROMPT COPY
 // ============================================================================
+function safeCopyText(text) {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => fallbackExecCopy(text));
+      return;
+    }
+  } catch (e) {}
+  fallbackExecCopy(text);
+}
+
+function fallbackExecCopy(text) {
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  } catch (e) {}
+}
+
 function copyGeminiPrompt(r) {
   const prompts = {
     1: `Run Python to analyze Round 1 (Walgreens Glucose Tampering & Deadband Width Trade-Off, Q1-Q6):
@@ -1808,7 +1833,7 @@ Part B (Q22-Q24):
 - Verify Finger-Stick Blood Glucose ([70, 130] mg/dL, mu=100, sig=7.0 -> Cp=Cpk=1.43, 17.8 DPMO) vs Blood Calcium / Potassium / Vitamin D.
 - Find the optimal $100,000 remediation portfolio across Line 1 (Blood Iron [90,110], mu=105, sig=2.0 -> Recenter mu=100 for $15k), Line 2 (Blood Calcium [8.5,10.5], mu=9.85, sig=0.55 -> Reroute to Venous Siemens mu=9.50, sig=0.25 for $60k), and Line 3 (Vitamin D [30,50], R-chart Out of Control sig=4.50 -> Fix Finger-Stick Cell Rupture via Venous Draw Tube sig=2.50 for $25k), and compute the final Combined 3-Line DPMO.`
   };
-  navigator.clipboard.writeText(prompts[r] || '');
+  safeCopyText(prompts[r] || '');
   const btn = document.getElementById('gem-btn-'+r);
   const old = btn.innerHTML;
   btn.innerHTML = '&#9989; Copied to Clipboard!';
@@ -1827,10 +1852,8 @@ if (npArea) {
   });
 }
 function clearNotepad() {
-  if (confirm('Clear your saved notepad entries?')) {
-    npArea.value = '';
-    try { localStorage.removeItem('mgt207_walgreens_notes_v2'); } catch(e) {}
-  }
+  npArea.value = '';
+  try { localStorage.removeItem('mgt207_walgreens_notes_v2'); } catch(e) {}
 }
 function resetAllSim() {
   state = {
@@ -1972,8 +1995,8 @@ function renderR5() {
         e.preventDefault();
         state.pastes = (state.pastes || 0) + 1;
         saveState();
-        updateTypingTelemetry();
-        alert('MGT 207 Academic Integrity Speed Bump:\n\nLarge copy-paste blocks (' + clip.length + ' chars) are disabled in the Executive Boardroom Memo.\n\nPlease synthesize your 4-6 sentence recommendation in your own words using your simulator findings!');
+        const el = document.getElementById('r5-typing-telemetry');
+        if (el) el.innerHTML = `<span style="color:var(--red);font-weight:700;">&#9888;&#65039; Large copy-paste (${clip.length} chars) blocked: Please synthesize your 4&ndash;6 sentence memo in your own words!</span>`;
         return;
       }
       state.pastes = (state.pastes || 0) + 1;
@@ -1992,7 +2015,8 @@ function renderR5() {
     fupInp.dataset.bound = '1';
     fupInp.addEventListener('paste', (e) => {
       e.preventDefault();
-      alert('Live Boardroom Stress-Test Rule: Clipboard paste is disabled on the 90-second follow-up response. Just type 1-2 direct sentences!');
+      const st = document.getElementById('r5-followup-status');
+      if (st) st.innerHTML = `<span style="color:var(--red);font-weight:700;">&#9888;&#65039; Clipboard paste is disabled on the 90-second follow-up. Just type 1&ndash;2 direct sentences!</span>`;
     });
     fupInp.addEventListener('input', () => {
       state.followupText = fupInp.value;
@@ -2146,7 +2170,8 @@ function startFollowupTimer() {
 async function evaluateExecutiveMemo() {
   const memoText = (document.getElementById('r5-memo-input')?.value || '').trim();
   if (memoText.length < 20) {
-    alert('Please write at least 3-4 sentences in your Executive Memo before requesting an AI Boardroom Review.');
+    const el = document.getElementById('r5-typing-telemetry');
+    if (el) el.innerHTML = `<span style="color:var(--red);font-weight:700;">&#9888;&#65039; Please type at least 3&ndash;4 sentences in your Executive Memo before clicking Submit!</span>`;
     return;
   }
   const btn = document.getElementById('btn-run-ai-coach');
@@ -2255,8 +2280,9 @@ function renderAIFeedbackBox(res) {
 
 function verifyFollowupDefense() {
   const fTxt = (document.getElementById('r5-followup-input')?.value || '').trim().toLowerCase();
+  const st = document.getElementById('r5-followup-status');
   if (fTxt.length < 15) {
-    alert('Please type a 1-2 sentence response to the Boardroom Follow-Up Question first.');
+    if (st) st.innerHTML = `<span style="color:var(--red);font-weight:700;">&#9888;&#65039; Please type a 1&ndash;2 sentence response to the Boardroom Follow-Up Question above first.</span>`;
     return;
   }
   if (followupInterval) clearInterval(followupInterval);
@@ -2267,7 +2293,6 @@ function verifyFollowupDefense() {
   state.followupBonus = bonus;
   saveState();
   if (state.lastScore) renderAIFeedbackBox(state.lastScore);
-  const st = document.getElementById('r5-followup-status');
   if (st) {
     st.innerHTML = `<strong style="color:var(--green);">&#9989; Stage 2 Defense Locked In (+${bonus.toFixed(1)} pts)! Click the green button below to copy your verified report for Canvas Q25.</strong>`;
   }
@@ -2302,11 +2327,17 @@ function copyCanvasQ25Submission() {
     `======================================================================`
   ].join('\n');
 
-  navigator.clipboard.writeText(report);
+  safeCopyText(report);
+  const prev = document.getElementById('r5-report-preview');
+  if (prev) {
+    prev.style.display = 'block';
+    prev.value = report;
+    prev.select();
+  }
   const btn = document.getElementById('btn-copy-q25');
   if (btn) {
     const old = btn.innerHTML;
-    btn.innerHTML = '&#9989; Copied Verified Report! Paste Directly into Canvas Quiz Q25';
+    btn.innerHTML = '&#9989; Copied &amp; Shown Below! Paste into Canvas Q25';
     setTimeout(() => btn.innerHTML = old, 3000);
   }
 }
