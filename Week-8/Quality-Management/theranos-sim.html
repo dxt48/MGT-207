@@ -2240,16 +2240,19 @@ function renderAIFeedbackBox(res) {
   wrap.style.display = 'block';
 
   const totalWithBonus = Math.min(10.0, +(res.baseScore + (state.followupBonus || 0)).toFixed(1));
-  const bannerColor = totalWithBonus >= 8.5 ? 'var(--green)' : (totalWithBonus >= 6.0 ? 'var(--amber)' : 'var(--red)');
+  const unlocked = totalWithBonus >= 5.0;
+  const bannerColor = unlocked ? 'var(--green)' : 'var(--amber)';
 
   document.getElementById('r5-ai-score-banner').innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:#f4f7fb;padding:10px 14px;border-radius:6px;border-left:5px solid ${bannerColor};">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;background:${unlocked ? '#eefaf3' : '#fef9f0'};padding:12px 16px;border-radius:6px;border-left:5px solid ${bannerColor};">
       <div>
         <div style="font-size:0.76rem;color:var(--muted);font-weight:700;text-transform:uppercase;">${res.engine}</div>
-        <div style="font-size:1.05rem;font-weight:800;color:var(--navy);">Stage 1 Memo Score: ${res.baseScore.toFixed(1)} / 10.0 pts ${state.followupBonus ? `(+${state.followupBonus.toFixed(1)} Stage 2 Defense = ${totalWithBonus.toFixed(1)} / 10.0)` : ''}</div>
+        <div style="font-size:1.05rem;font-weight:800;color:var(--navy);">AI Coach Rubric Score: ${totalWithBonus.toFixed(1)} / 10.0 pts</div>
       </div>
-      <div style="font-size:0.8rem;color:var(--navy);font-weight:600;">
-        You can revise your memo above and re-submit anytime to improve your score!
+      <div style="font-size:0.92rem;font-weight:800;color:${unlocked ? 'var(--green)' : '#b35900'};background:#fff;padding:6px 12px;border-radius:6px;border:2px solid ${bannerColor};">
+        ${unlocked
+          ? '&#9989; UNLOCKED! Canvas Q25 Boardroom Approval Code: <span style="font-size:1.15rem;color:var(--navy);text-decoration:underline;">1272</span>'
+          : '&#128274; Score &ge; 5.0 / 10.0 Needed to Unlock Q25 Code (Revise Memo Using Hints Below &amp; Re-Submit!)'}
       </div>
     </div>
   `;
